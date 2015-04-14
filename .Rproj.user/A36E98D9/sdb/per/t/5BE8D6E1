@@ -1,0 +1,17 @@
+{
+    "contents" : "# mean Soil Moisture Content Basin\n\nGEOtop_MeanMoistBasin <- function(wpath, mapkey, layers, soil_files)\n{}",
+    "created" : 1428569657067.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4228888614",
+    "id" : "5BE8D6E1",
+    "lastKnownWriteTime" : 1428569767,
+    "path" : "~/GitHub/AnalyseGEOtop/GEOtop_MeanMoistBasin.R",
+    "project_path" : "GEOtop_MeanMoistBasin.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

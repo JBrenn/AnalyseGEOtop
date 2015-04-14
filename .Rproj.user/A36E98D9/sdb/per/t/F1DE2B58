@@ -1,0 +1,16 @@
+{
+    "contents" : "\\name{GEOtop_CheckHydroBudget}\n\\alias{GEOtop_CheckHydroBudget}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nCheck the hydrological budget of a GEOtop 3d simulation\n}\n\\description{\nComparison of simulated and observed runoff (if provided). Checking the hydrological budget of the simulation (dS/dt = P - Q - ET).\n}\n\\usage{\nGEOtop_CheckHydroBudget(wpath, Q_obs, Q_obs_data, soil_files, list_file=\"listpoints.txt\")\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{wpath}{\n  working path, pointing into simulation folder\n  }\n  \\item{Q_obs}{\n  character describing if and in which time scale observed discharge data is provided. \"hour\": hourly data; \"day\": daily data;\"n\": no observed discharge data prvided\n  }\n  \\item{Q_obs_data}{\n  zoo object, observed discharge data in m^3/s\n  }\n  \\item{soil_files}{\n  boolean, TRUE: soil files are provided as GEOtop input. FALSE: soil is parameterized in the geotop.inpts file\n  }\n    \\item{list_file}{\n  character, name of the listpoint file defining GEOtop output points, if not available: list_file = NULL, information is read from geotop.inpts\n  }\n}\n\\details{\n%%  ~~ If necessary, more details than the description above ~~\n}\n\\value{\nPDF files containing specific analyse plots:\n\\item{Ppartitioning.pdf}{Areal precipitation amounts and partitioning in the components snow and rain, first glew on discharge}\n\\item{QsimVSQobs.pdf}{Simulated versus observed discharge, hourly - daily - monhly aggregations and GOFs}\n\\item{WaterBudget.pdf}{Analytic plot on the water budget of the simulation}\n}\n\\references{\n%% geotop reference Endrizzi2013, Bertoldi2006\nEndrizzi, S., Gruber, S., Amico, M. D., & Rigon, R. (2014). \\strong{GEOtop 2.0 : simulating the combined energy and water balance at and below the land surface accounting for soil freezing , snow cover and terrain effects.} \\emph{Geosci. Model Dev., 7, 2831-2857}. doi:10.5194/gmd-7-2831-2014\n}\n\\author{\nJohannes Brenner, \\email{Johannes.Brenner@eurac.edu}\n}\n\\note{\n%%  ~~further notes~~\n}\n\n%% ~Make other sections like Warning with \\section{Warning }{....} ~\n\n\\seealso{\n%% ~~objects to See Also as \\code{\\link{help}}, ~~~\n}\n\\examples{\n##---- Should be DIRECTLY executable !! ----\n##-- ==>  Define data, use random,\n##--  or do  help(data=index)  for the standard data sets.\n\n## The function is currently defined as\nfunction (x) \n{\n  }\n}\n% Add one or more standard keywords, see file 'KEYWORDS' in the\n% R documentation directory.\n\\keyword{}\n\\keyword{}% __ONLY ONE__ keyword per line\n",
+    "created" : 1427123783971.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "839487432",
+    "id" : "F1DE2B58",
+    "lastKnownWriteTime" : 1427363521,
+    "path" : "~/GitHub/AnalyseGEOtop/man/GEOtop_CheckHydroBudget.Rd",
+    "project_path" : "man/GEOtop_CheckHydroBudget.Rd",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_doc"
+}

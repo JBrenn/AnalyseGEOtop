@@ -1,0 +1,17 @@
+{
+    "contents" : "# plot maps from raster \n\nGEOtop_ReadPlotRst <- function(map, date, variable, layer, limits, legend,#\n                               lowcol=\"#f7fbff\", highcol=\"#08306b\")\n{\n  map <- raster(map)\n  \n  #convert the raster to points for plotting\n  map.p <- rasterToPoints(map)\n  #Make the points a dataframe for ggplot\n  df <- data.frame(map.p)\n  #Make appropriate column headings\n  colnames(df) <- c(\"Longitude\", \"Latitude\", \"MAP\")\n#   \n  if (is.null(layer)) {\n    var_layer_date <- paste(variable, \" | \", date, sep=\" \")\n  } else {\n    var_layer_date <- paste(variable, \" | layer \", layer, \" | \", date, sep=\" \")\n  }\n  \n  ggp <- ggplot(data=df, aes(y=Latitude, x=Longitude)) +\n    geom_raster(aes(fill=MAP)) +\n    # geom_point(data=sites, aes(x=x, y=y), color=\"white\", size=3, shape=4) +\n    theme_bw() +\n    coord_equal() +\n    scale_fill_gradient(legend, limits=limits, low = lowcol, high = highcol, space = \"Lab\", na.value = \"grey50\", \n                        guide = \"colourbar\") +\n    theme(axis.title.x = element_text(size=13),\n          axis.title.y = element_text(size=13),\n          axis.text.x = element_text(size=12),\n          axis.text.y = element_text(size=12, angle=75),\n          panel.grid.major = element_blank(),\n          panel.grid.minor = element_blank(),\n          legend.position = \"bottom\",\n          legend.key = element_blank(),\n          plot.title =element_text(size=14) ) +\n    ggtitle(var_layer_date)\n\n  return(ggp)\n}",
+    "created" : 1426846070480.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3467912097",
+    "id" : "70BC1A7",
+    "lastKnownWriteTime" : 1427122848,
+    "path" : "~/GitHub/AnalyseGEOtop/R/GEOtop_ReadPlotRst.R",
+    "project_path" : "R/GEOtop_ReadPlotRst.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "\\name{GEOtop_animateMAPS}\n\\alias{GEOtop_animateMAPS}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nGEOtop output map animation\n}\n\\description{\nGEOtop output map animation. Using GEOtop_ReadPlotRst() to visualize GEOtop output maps in pdf format and ImageMagick to animate images.\n}\n\\usage{\nGEOtop_animateMAPS(path, mapkey, layers, soil_files, variable, limits, legend, \n                               lowcol=\"#f7fbff\", highcol=\"#08306b\", delay_value=NULL)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{path}{path into GEOtop simulation}\n  \\item{mapkey}{keyword name; see package \\emph{geotopbricks}, function \\emph{get.geotop.inpts.keyword.value}, argument \\emph{keyword}}\n  \\item{layers}{default = NULL, for variables without layering e.g. snow water eqivalent; integer vector defining layers which should be processed for data with layerinf, e.g. soil moisture}\n  \\item{soil_files}{boolean, TRUE: soil files are provided as GEOtop input. FALSE: soil is parameterized in the geotop.inpts file}\n  \\item{variable}{character, variable characterization}\n  \\item{map}{numeric, vector setting y-limits for plot}\n  \\item{legend}{character, legend characterization, e.g. \"vol\\%\" for soil moisture data}\n  \\item{lowcol}{minimum colour for visualization, default = \"#f7fbff\"}\n  \\item{highcol}{maximum colour for visualization, default = \"#08306b\"; default is creating a blue       colour}\n  \\item{delay_value}{default = NULL, argument for function convert (ImageMagick), display the next image after pausing}\n}\n\\details{\n%%  ~~ If necessary, more details than the description above ~~\n}\n\\value{\n.gif animation file in folder \"path/gif\"\n}\n\\references{\n%% ~put references to the literature/web site here ~\n}\n\\author{\nJohannes Brenner, \\email{Johannes.Brenner@eurac.edu}\n}\n\\note{\nfor further information on ImageMagick see \\url{http://www.imagemagick.org/}, for information on how to install on LINUX (UHREL, Ubuntu) and CentOS see \\url{http://tecadmin.net/install-imagemagick-on-linux/}\n}\n\n%% ~Make other sections like Warning with \\section{Warning }{....} ~\n\n\\seealso{\n%% ~~objects to See Also as \\code{\\link{help}}, ~~~\n}\n\\examples{\n\n}\n% Add one or more standard keywords, see file 'KEYWORDS' in the\n% R documentation directory.\n\\keyword{ ~kwd1 }\n\\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line\n",
+    "created" : 1427122866240.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4252959177",
+    "id" : "F3F8B135",
+    "lastKnownWriteTime" : 1427283933,
+    "path" : "~/GitHub/AnalyseGEOtop/man/GEOtop_animateMAPS.Rd",
+    "project_path" : "man/GEOtop_animateMAPS.Rd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_doc"
+}

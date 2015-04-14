@@ -1,0 +1,21 @@
+Package: AnalyseGeotop
+Version: 0.1
+Date: 2015-02-24
+Title: Analyse GEOtop simulations
+Author: Johannes Brenner <Johannes.Brenner@eurac.com>
+Maintainer: Johannes Brenner <Johannes.Brenner@eurac.com>
+Description: Read output from GEOtop simulations and analyse in terms of e.g. hydrological budget.
+Depends: R (>= 3.0.3)
+License: LGPL (>= 2)
+Imports:
+    geotopbricks,
+    chron,
+    zoo,
+    hydroTSM,
+    hydroGOF,
+    soilwater,
+    raster,
+    sp,
+    ggplot2,
+    xts,
+    RSAGA

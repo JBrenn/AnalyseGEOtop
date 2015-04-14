@@ -1,0 +1,16 @@
+{
+    "contents" : "# Default NAMESPACE created by R\n# Remove the previous line if you edit this file\n\nimport(geotopbricks)\nimport(chron)\nimport(zoo)\nimport(hydroTSM)\nimport(hydroGOF)\nimport(soilwater)\nimport(raster)\nimport(sp)\nimport(ggplot2)\nimport(xts)\nimport(RSAGA)\n\n# Export all names\nexportPattern(\".\")\n",
+    "created" : 1424859273594.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3652743404",
+    "id" : "B91C087A",
+    "lastKnownWriteTime" : 1424859300,
+    "path" : "~/GitHub/AnalyseGEOtop/NAMESPACE",
+    "project_path" : "NAMESPACE",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_namespace"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "\\name{GEOtop_multiplePointPlot_Montecini}\n\\alias{GEOtop_multiplePointPlot_Montecini}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nAnalysis of GEOtop one-dimensional simulations for the Montecini domain\n}\n\\description{\nReading and analysing GEOTtop simulations providing multiple point output for the Montecini domain (micro-meteo stations B, I, and P). \n}\n\\usage{\nGEOtop_multiplePointPlot_Montecini(path, model_run, stations, val_aggr, read_data, calibration, use_swc_liq, soil_files, lc_classes)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n \\item{path}{\n  path pointing into simulation folder\n  }\n   \\item{model_run}{\n  name of simulation folder\n  }\n  \\item{stations}{\n  character vector, names of GEOtop output sites\n  }\n  \\item{val_aggr}{\n  aggregation performed on output data. \"h\": hourly; \"d\": daily\n  }\n  \\item{read_data}{\n  boolean, TRUE: GEOtop point output is read; FALSE: R workspace point.RData (from former run) is read\n  }\n  \\item{calibration}{\n  boolean, TRUE: calibrated SMC sensor data is used for comparision with simulated SMC; FALSE: use of uncalibrated SMC data\n  }\n    \\item{use_swc_liq}{\n  boolean, TRUE: only liquid component of SMC is used for comparision with simulated SMC; FALSE: use of liquid and solid SMC data\n  }\n  \\item{soil_files}{\n  boolean, TRUE: soil files are provided as GEOtop input. FALSE: soil is parameterized in the geotop.inpts file\n  }\n  \\item{lc_classes}{\n  character vector, names of landcover classes in GEOtop simulation\n  }\n}\n\\details{\n\n}\n\\value{\n%%  ~Describe the value returned\n%%  If it is a LIST, use\n%%  \\item{comp1 }{Description of 'comp1'}\n%%  \\item{comp2 }{Description of 'comp2'}\n%% ...\n}\n\\references{\n%% ~put references to the literature/web site here ~\n}\n\\author{\nJohannes Brenner, \\email{Johannes.Brenner@eurac.edu}\n}\n\\note{\nObserved SMC data derived from function ... (package)\nObserved Soil Temperature data from function ... (package)\nObserved latent and sensible heat data \n}\n\n%% ~Make other sections like Warning with \\section{Warning }{....} ~\n\n\\seealso{\n%% ~~objects to See Also as \\code{\\link{help}}, ~~~\n}\n\\examples{\n}\n% Add one or more standard keywords, see file 'KEYWORDS' in the\n% R documentation directory.\n\\keyword{ ~kwd1 }\n\\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line\n",
+    "created" : 1428663237362.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3450733633",
+    "id" : "4BA0B363",
+    "lastKnownWriteTime" : 1428663347,
+    "path" : "~/GitHub/AnalyseGEOtop/man/GEOtop_multiplePointPlot_Montecini.Rd",
+    "project_path" : "man/GEOtop_multiplePointPlot_Montecini.Rd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_doc"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "# test package\n\n#-------\n# package DataBaseAlpEnvEURAC provides functions to read station data from Mazia/Matsch\n# hereafter used to retrieve soil moisture and soil temperature data\nlibrary(DataBaseAlpEnvEURAC)\n\n#-------\n# using functions\n# 1 GEOtop_ReadPointVar\n\nWG1_005 <- GEOtop_Read_multipoint(path = \"Y:/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/Discharge/\",\n                       model_run = \"WG1_005\", \n                       stations = c(\"M3\",\"M4\"), val_aggr = \"h\", \n                       soil_files = F, \n                       lc_classes = c(\"Urban\",\"Forest\",\"Grassland(dry)/Pastures\",\"Meadows\",\n                                      \"Rocks\",\"Bare soil\",\"Larch Meadows\",\"Agriculture (Baumobst- und Weinbau)\",\n                                      \"Glacier/Snow\", \"Lake/River/Bog\"))\n\n#-------\n# using functions\n# 1 dB_readStationData\n# 2 dB_getSWC\n# 3 dB_getSoilTemp\n\nGEOtop_multiplePointPlot_Montecini(path = \"Y:/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/Discharge/\",\n                                   model_run = \"WG1_004\", \n                                   stations = c(\"M3\",\"M4\"), val_aggr = \"h\", \n                                   read_data = F,calibration = F,\n                                   use_swc_liq = F,soil_files = F, \n                                   lc_classes = c(\"Urban\",\"Forest\",\"Grassland(dry)/Pastures\",\"Meadows\",\n                                                  \"Rocks\",\"Bare soil\",\"Larch Meadows\",\"Agriculture (Baumobst- und Weinbau)\",\n                                                  \"Glacier/Snow\", \"Lake/River/Bog\"))\n\n#-------\n#Function GEOtop_CheckHydroBudget on simulation WG1_004 (Johannes) and umvoti_011 (Shalini)\n\nlibrary(zoo)\nlibrary(chron)\nQ_obs <- read.csv2(\"H:/Projekte/HiResAlp/06_Workspace/BrJ/02_data/discharge/WG1_Saldur.csv\",header=T)\ndatetime <- chron(dates. = substr(Q_obs$Time,1,10),times. = paste(substr(Q_obs$Time,12,17),\":00\",sep=\"\"),\n                  format = c(dates=\"d.m.y\", times=\"h:m:s\"), out.format = c(dates=\"d/m/y\", times=\"h:m:s\"))\ndatetime <- as.POSIXct(datetime)\nQ_obs_data <- zoo(x = as.numeric(as.character((Q_obs$Q.m3.s))), order.by = datetime)  \n\nGEOtop_CheckHydroBudget(wpath=\"Y:/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/Discharge/WG1_004/\", \n                        Q_obs = \"hour\", Q_obs_data = Q_obs_data, \n                        soil_files = F)\n\n\nlibrary(zoo)\nlibrary(chron)\nlibrary(devtools)\n\nremove.packages(\"AnalyseGeotop\")\ninstall_github(\"JBrenn/AnalyseGeotop\")\nlibrary(AnalyseGeotop)\n\nQ_obs <- read.csv(\"H:/Projekte/Shalini/Data/ObsRunoff.csv\",header=T)\ndate  <- as.Date(x = Q_obs$Date, format=\"%d/%m/%Y\")\nQ_obs_data <- zoo(x = Q_obs$obs_flow.m3.s., order.by = date)  \n\nGEOtop_CheckHydroBudget(wpath=\"Y:/Simulation_GEOtop_2_0_GIT/Shalini/umvoti_011/\", \n                        Q_obs = \"day\",  Q_obs_data = Q_obs_data,\n                        soil_files = T)\n\n",
+    "created" : 1424783961916.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2618290464",
+    "id" : "3318B3B",
+    "lastKnownWriteTime" : 1425577097,
+    "path" : "~/GitHub/AnalyseGEOtop/examples.R",
+    "project_path" : "examples.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
