@@ -8,7 +8,8 @@ Analysis of GEOtop one-dimensional simulations for the Montecini domain
 Reading and analysing GEOTtop simulations providing multiple point output for the Montecini domain (micro-meteo stations B, I, and P). 
 }
 \usage{
-GEOtop_multiplePointPlot_Montecini(path, model_run, stations, val_aggr, read_data, calibrate, use_swc_liq, soil_files, lc_classes)
+GEOtop_multiplePointPlot_Montecini(path, model_run, stations, val_aggr, read_data, calibrate, 
+                                    use_swc_liq, soil_files, lc_classes, linux)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,6 +40,9 @@ GEOtop_multiplePointPlot_Montecini(path, model_run, stations, val_aggr, read_dat
   \item{lc_classes}{
   character vector, names of landcover classes in GEOtop simulation
   }
+  \item{linux}{
+  boolean, TRUE: working on linux laptop, FALSE: working on windows laptop; for path retrieval via \emph{data(SWCinfo)}
+  }
 }
 \details{
 
@@ -51,7 +55,7 @@ GEOtop_multiplePointPlot_Montecini(path, model_run, stations, val_aggr, read_dat
 %% ...
 }
 \references{
-%% ~put references to the literature/web site here ~
+Endrizzi, S., Gruber, S., Amico, M. D., & Rigon, R. (2014). \strong{GEOtop 2.0 : simulating the combined energy and water balance at and below the land surface accounting for soil freezing , snow cover and terrain effects.} \emph{Geosci. Model Dev., 7, 2831-2857}. doi:10.5194/gmd-7-2831-2014
 }
 \author{
 Johannes Brenner, \email{Johannes.Brenner@eurac.edu}

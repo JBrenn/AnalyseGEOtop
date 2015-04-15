@@ -12,10 +12,12 @@
   # calibration should calibration function for SMC data be applied
   # use_swc_liq only use liquid SWC for validation
   # lc_classes  names of landcover classes in simulation
+  # linux       TRUE: working on linux laptop, FALSE: working on windows laptop; for path retrieval
+  # soil_files
 
 GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations, 
                                               val_aggr, read_data, calibrate, use_swc_liq, soil_files,
-                                              lc_classes)
+                                              lc_classes, linux)
 {
   # load libraries
 #   require(zoo)
@@ -276,7 +278,9 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     
     # read info for SWC input (measured data)
     # SWCinfo <- read.csv(file = "H:/Projekte/HydroAlp/06_Workspace/BrJ/03_R/GEOtopAnalyse/SWCinfo.txt")
-    SWCinfo <- read.csv2(file = "validation_data/SWCinfo.txt")
+    # SWCinfo <- read.csv2(file = "validation_data/SWCinfo.txt")
+    data(SWCinfo)
+    if (linux) SWCinfo <- SWCinfoLIN else SWCinfo <- SWCinfoWIN
 
     # save workspace
     save(list = c("list_station","SWCinfo","soil_head","soil_header","wpath","fc"), 

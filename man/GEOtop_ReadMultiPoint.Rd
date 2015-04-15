@@ -8,7 +8,7 @@ Read multi point output from GEOtop simulation
 Read multi point output from GEOtop simulation using the \pkg{geotopbricks} package.
 }
 \usage{
-GEOtop_Read_multipoint(path, model_run, stations, val_aggr, soil_files, lc_classes)
+GEOtop_Read_multipoint(path, model_run, stations, val_aggr, soil_files, lc_classes, linux)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,6 +29,9 @@ GEOtop_Read_multipoint(path, model_run, stations, val_aggr, soil_files, lc_class
   }
   \item{lc_classes}{
   character vector, names of landcover classes in GEOtop simulation
+  }
+  \item{linux}{
+  boolean, TRUE: working on linux laptop, FALSE: working on windows laptop; for path retrieval via \emph{data(SWCinfo)}
   }
 }
 \details{
@@ -57,14 +60,6 @@ Slow, as point files are read for each variable!
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x) 
-{
-  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
