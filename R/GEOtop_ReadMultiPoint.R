@@ -158,7 +158,16 @@ GEOtop_Read_multipoint <- function(path, model_run, stations, val_aggr, soil_fil
       soil_input <- get.geotop.inpts.keyword.value(keyword="SoilParFile", wpath=wpath, data.frame=TRUE)
       soil_thickness <- soil_input[,1]
     } else {
-      soil_thickness <- get.geotop.inpts.keyword.value("SoilLayerThicknesses", numeric = T, wpath=wpath)
+      Dz <- soil_thickness <- get.geotop.inpts.keyword.value("SoilLayerThicknesses", numeric = T, wpath=wpath)
+      Kh <-     get.geotop.inpts.keyword.value("NormalHydrConductivity", numeric = T, wpath=wpath)
+      Kv <-     get.geotop.inpts.keyword.value("LateralHydrConductivity", numeric = T, wpath=wpath)
+      vwc_r <-  get.geotop.inpts.keyword.value("ThetaRes", numeric = T, wpath=wpath)
+      vwc_w <-  get.geotop.inpts.keyword.value("WiltingPoint", numeric = T, wpath=wpath)
+      vwc_fc <- get.geotop.inpts.keyword.value("FieldCapacity", numeric = T, wpath=wpath)
+      vwc_s <-  get.geotop.inpts.keyword.value("ThetaSat", numeric = T, wpath=wpath)
+      alpha <-  get.geotop.inpts.keyword.value("AlphaVanGenuchten", numeric = T, wpath=wpath) 
+      n <-      get.geotop.inpts.keyword.value("NVanGenuchten", numeric = T, wpath=wpath)
+      soil_input <- data.frame(Dz,Kh,Kv,vwc_r,vwc_w,vwc_fc,vwc_s,alpha,n)
     }
     
     # output depth in mm
@@ -276,7 +285,7 @@ GEOtop_Read_multipoint <- function(path, model_run, stations, val_aggr, soil_fil
     if (linux) SWCinfo <- SWCinfoLIN else SWCinfo <- SWCinfoWIN
     
     # save workspace
-    save(list = c("list_station","SWCinfo","soil_head","soil_header","wpath","fc"), 
+    save(list = c("list_station","SWCinfo","soil_head","soil_header","wpath","fc","soil_input"), 
          file = paste(wpath,"/point.RData",sep=""))
   
   return(list_station)

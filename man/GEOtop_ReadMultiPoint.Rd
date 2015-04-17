@@ -38,11 +38,7 @@ GEOtop_Read_multipoint(path, model_run, stations, val_aggr, soil_files, lc_class
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+workspace \emph{point.RData}, containing point output variables, soil moisture and soil temperature output (list_station), input soil characteristics (soil_input). Stored in GEOtop simulation folder, defined by the arguments \emph{path} and \emph{model_run}.
 }
 \references{
 Endrizzi, S., Gruber, S., Amico, M. D., & Rigon, R. (2014). \strong{GEOtop 2.0 : simulating the combined energy and water balance at and below the land surface accounting for soil freezing , snow cover and terrain effects.} \emph{Geosci. Model Dev., 7, 2831-2857}. doi:10.5194/gmd-7-2831-2014
