@@ -388,7 +388,9 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     #ET to zoo 
     if (i == "B2" | i=="I1") 
     {
-      ET_B2 <- read.csv2("./validation_data/ET_B2.csv", header=TRUE)
+      #ET_B2 <- read.csv2("./validation_data/ET_B2.csv", header=TRUE)
+      data(validation)
+      ET_B2 <- ET_B2
       ET_B2 <- zoo(x=ET_B2$ET_mm_d, order.by=as.Date(x=ET_B2$date,format="%d.%m.%y"))
       
       evapotrans <- list_station[[i]]$ET
@@ -464,7 +466,8 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     if (i == "B2" | i == "I1") 
     {
       # Energy fluxes to zoo
-      EnergyFluxes_df <- read.csv("./validation_data//EnergyFluxesVinschgau_I_2011_05-2014_04.csv", na.strings="#N/A")
+      #EnergyFluxes_df <- read.csv("./validation_data//EnergyFluxesVinschgau_I_2011_05-2014_04.csv", na.strings="#N/A")
+      EnergyFluxes_df <- EnergyFluxes_df
       EnergyFluxes <- zoo(x=EnergyFluxes_df[,c(2,3)], 
                           order.by=as.POSIXct(x=strptime(as.character(EnergyFluxes_df$Date_Time), format = "%d/%m/%Y %H:%M")))
       EnergyFluxes <- EnergyFluxes[-which(is.na(time(EnergyFluxes))),]
