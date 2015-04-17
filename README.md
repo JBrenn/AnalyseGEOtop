@@ -6,7 +6,7 @@ R package for GEOtop simulation analysis including functionality for
 * read single / multiple point output from GEOtop simulation 
 * GEOtop output map animation (using ImageMagick)
 * diagnostic plots on hydrological budget in GEOtop 3d simulation
-
+* Visualisation of Soil Water Retention Curve (van Genuchten model)
 
 # How to start
 
