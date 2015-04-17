@@ -354,6 +354,11 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       for (n in 3:length(soil_temp_labs)) soil_temp <- cbind(soil_temp, list_station[[i]][[soil_temp_labs[n]]])  
     names(soil_temp) <- soil_temp_labs
 
+    soil_psi_labs <- paste("PSI_", soil_head, sep="")
+    soil_psi <- cbind(list_station[[i]][[soil_psi_labs[1]]], list_station[[i]][[soil_psi_labs[2]]])
+    for (n in 3:length(soil_psi_labs)) soil_psi <- cbind(soil_psi, list_station[[i]][[soil_psi_labs[n]]])  
+    names(soil_psi) <- soil_psi_labs
+
     print(paste("start ploting station ", i, sep=""))
     
     pdf(paste(wpath,"/",i, "_", val_aggr, "_", model_run, ".pdf", sep=""))
@@ -410,7 +415,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       
       # validation plots ET
       plot(cumsum(ET), screens=c(1,1), type="l", col=c("black","grey"), lwd=3, 
-           main=paste(i, " | Cumulated evapotranspiration"), sep="", ylab="mm")
+           main=paste(i, " | Cumulated evapotranspiration", sep=""), ylab="mm")
       legend("bottomright", legend=c("observed EddyCov", "simulated GEOtop"), lwd=3, bty="n", col=c("black", "grey"))
       plot(ET_month, screens=c(1,1), type="b", pch=c(1,16), cex=2, lwd=3,
            main=paste(i, " | Monthly evapotranspiration sums"), ylab="mm", 
@@ -470,8 +475,9 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       EnergyFluxes_df <- EnergyFluxes_df
       EnergyFluxes <- zoo(x=EnergyFluxes_df[,c(2,3)], 
                           order.by=as.POSIXct(x=strptime(as.character(EnergyFluxes_df$Date_Time), format = "%d/%m/%Y %H:%M")))
-      EnergyFluxes <- EnergyFluxes[-which(is.na(time(EnergyFluxes))),]
+      #EnergyFluxes <- EnergyFluxes[-which(is.na(time(EnergyFluxes))),]
       EnergyFluxes_NAspline <- zoo(x = na.approx.default(EnergyFluxes, na.rm = FALSE), order.by = time(EnergyFluxes))
+     
       EnergyFluxes_daily <- aggregate(x = EnergyFluxes, by = as.Date(time(EnergyFluxes)), FUN = mean, na.rm=TRUE)
       EnergyFluxes_NAspline_daily <- aggregate(x = EnergyFluxes_NAspline, by = as.Date(time(EnergyFluxes)), FUN = mean, na.rm=TRUE)
       
@@ -563,6 +569,17 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       
     }
     
+    # Soil Water pressure head (pF values)
+    max_psi <- max(log(abs(soil_psi)),na.rm=T)
+    max_time <- max(as.numeric(time(soil_psi)))
+
+    plot.zoo(log(abs(soil_psi)), main=paste(i, " | Soil Water Potential"), ylim = c(0,max_psi),
+             ylab=paste("pF ", soil_head/1000, "m [-]",sep=""), 
+             panel=function(x,y,...) {
+               lines(x,y)
+               abline(h=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
+               text(x = max_time, y = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
+             })
     
     # Soil Water Content
     plot.zoo(swc*100, main=paste(i, " | Soil Water Content"), ylim = c(0,max(swc*100, na.rm = T)),
