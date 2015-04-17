@@ -10,7 +10,7 @@ License: LGPL (>= 2)
 LazyData: Yes
 LazyLoad: Yes
 Imports:
-    geotopbricks,imation
+    geotopbricks,
     chron,
     zoo,
     hydroTSM,
