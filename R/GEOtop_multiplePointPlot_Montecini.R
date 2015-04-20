@@ -583,6 +583,15 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                abline(h=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
                text(x = max_time, y = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
              })
+
+    if (val_aggr=="d") psi_liq <- aggregate(soil_psi, as.Date(time(soil_psi)), mean)
+    # stay on hourly data
+    if (val_aggr=="h") psi_liq <- zoo(coredata(soil_psi), as.POSIXct(time(soil_psi)))
+
+    # 50mm 
+    soil_psi5  <- psi_liq[,which.min(abs(soil_head-50))]
+    # 200mm
+    soil_psi20 <- psi_liq[,which.min(abs(soil_head-200))]
     
     if (i=="B2") 
     {
@@ -592,6 +601,36 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                                   station = as.character(SWCinfo[SWCinfo$STATION==i,4]), 
                                   station_nr = as.integer(substr(SWCinfo[SWCinfo$STATION==i,1],2,2)),
                                   aggregation = val_aggr)
+      
+      # chron2posix
+      posTime <- as.POSIXct(time(PSI))
+      PSI <- zoo(coredata(PSI), posTime)
+      
+      psi_5 <- rowMeans(PSI[,c(2,3)])
+      psi_5 <- zoo(psi_5, time(PSI))
+      psi_5 <- log10(psi_5)
+      
+      soil_psi5 <- log10(-soil_psi5)
+      
+      swp5 <- merge(psi_5,soil_psi5)
+      names(swp5) <- c("psi_obs", "psi_sim")
+      
+      psi_20 <- PSI[,4]
+      psi_20 <- log10(psi_20)
+      
+      soil_psi20 <- log10(-soil_psi20)
+      
+      swp20 <- merge(psi_20,soil_psi20)
+      names(swp20) <- c("psi_obs", "psi_sim")
+      
+      ggof(sim = swp5$psi_sim, obs = swp5$psi_obs,
+           ftype="o", FUN=mean, ylab="pF in 5cm depth [-]",
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+      
+      ggof(sim = swp20$psi_sim, obs = swp20$psi_obs,
+           ftype="o", FUN=mean, ylab="pF in 20cm depth [-]",
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+      
     }
  
     # Soil Water Content
