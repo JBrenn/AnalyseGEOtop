@@ -123,6 +123,17 @@ if (coordinates_value_df)
                                                date_field="Date12.DDMMYYYYhhmm.",
                                                tz="Etc/GMT+1")
 
+# read psi 
+  if (keyword=="SoilLiqWaterPressProfileFile" | keyword=="SoilLiqWaterPressProfileFile")
+    point_data <- get.geotop.inpts.keyword.value(keyword=keyword, wpath=wpath,
+                                                 raster=FALSE,
+                                                 data.frame=TRUE,
+                                                 #  start_date=as.POSIXct(start), 
+                                                 #  end_date=as.POSIXct(end),
+                                                 level=level, 
+                                                 date_field="Date12.DDMMYYYYhhmm.",
+                                                 tz="Etc/GMT+1", isNA=NA)
+
 # extract Variable of interest
 #------------------------------
   # evemtually as loop - for more variales of interest...
