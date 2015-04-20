@@ -569,11 +569,14 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       
     }
     
-    # Soil Water pressure head (pF values)
-    max_psi <- max(log(abs(soil_psi)),na.rm=T)
+    # Soil Water pressure head (pF values) 
+    # units: milimeters convert to cm
+    soil_psi <- soil_psi / 10
+
+    max_psi <- max(log10(abs(soil_psi)),na.rm=T)
     max_time <- max(as.numeric(time(soil_psi)))
 
-    plot.zoo(log(abs(soil_psi)), main=paste(i, " | Soil Water Potential"), ylim = c(0,max_psi),
+    plot.zoo(log10(abs(soil_psi)), main=paste(i, " | Soil Water Potential"), ylim = c(0,max_psi),
              ylab=paste("pF ", soil_head/1000, "m [-]",sep=""), 
              panel=function(x,y,...) {
                lines(x,y)
@@ -581,6 +584,16 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                text(x = max_time, y = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
              })
     
+    if (i=="B2") 
+    {
+      # compare with mesure soil water pressure
+      PSI <-     SWC <- dB_getSWP(path2files = as.character(SWCinfo[SWCinfo$STATION==i,2]), 
+                                  header.file = as.character(SWCinfo[SWCinfo$STATION==i,3]),
+                                  station = as.character(SWCinfo[SWCinfo$STATION==i,4]), 
+                                  station_nr = as.integer(substr(SWCinfo[SWCinfo$STATION==i,1],2,2)),
+                                  aggregation = val_aggr)
+    }
+ 
     # Soil Water Content
     plot.zoo(swc*100, main=paste(i, " | Soil Water Content"), ylim = c(0,max(swc*100, na.rm = T)),
              ylab=paste(soil_head/1000,"m [vol%]",sep=""))
