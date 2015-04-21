@@ -596,11 +596,11 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     if (i=="B2") 
     {
       # compare with mesure soil water pressure
-      PSI <-     SWC <- dB_getSWP(path2files = as.character(SWCinfo[SWCinfo$STATION==i,2]), 
-                                  header.file = as.character(SWCinfo[SWCinfo$STATION==i,3]),
-                                  station = as.character(SWCinfo[SWCinfo$STATION==i,4]), 
-                                  station_nr = as.integer(substr(SWCinfo[SWCinfo$STATION==i,1],2,2)),
-                                  aggregation = val_aggr)
+      PSI <- dB_getSWP(path2files = as.character(SWCinfo[SWCinfo$STATION==i,2]), 
+                       header.file = as.character(SWCinfo[SWCinfo$STATION==i,3]),
+                       station = as.character(SWCinfo[SWCinfo$STATION==i,4]), 
+                       station_nr = as.integer(substr(SWCinfo[SWCinfo$STATION==i,1],2,2)),
+                       aggregation = val_aggr)
       
       # chron2posix
       posTime <- as.POSIXct(time(PSI))
@@ -631,11 +631,30 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
            ftype="o", FUN=mean, ylab="pF in 20cm depth [-]",
            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
       
+      # scatterplot
+     
+      op <- par(pty="s", mfrow=c(1,2), las=1)
+      
+      plot(x = swp5$psi_sim, y =  swp5$psi_obs, ylim=c(0,7), xlim=c(0,7), ylab="observerd pF", xlab="simulated pF")
+      abline(a = 0,b = 1, col="grey", lty="dashed")
+      abline(h=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
+      abline(v=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
+      text(x = 7, y = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
+      text(y = 7, x = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
+      text(x = 0, y = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
+      text(y = 0, x = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
+      
+      plot(x = swp20$psi_sim, y =  swp20$psi_obs, ylim=c(0,7), xlim=c(0,7), ylab="observerd pF", xlab="simulated pF")
+      abline(a = 0,b = 1, col="grey", lty="dashed")
+      abline(h=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
+      abline(v=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
+      text(x = 7, y = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
+      text(y = 7, x = c((1.8+2.5)/2,4.2), labels = c("FC", "PWP"), col=rgb(1,0,0,.5))
+      text(x = 0, y = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
+      text(y = 0, x = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
+      
+      par(op)
     }
- 
-    # Soil Water Content
-    plot.zoo(swc*100, main=paste(i, " | Soil Water Content"), ylim = c(0,max(swc*100, na.rm = T)),
-             ylab=paste(soil_head/1000,"m [vol%]",sep=""))
     
     # read measured data
     SWC <- dB_getSWC(path2files = as.character(SWCinfo[SWCinfo$STATION==i,2]), 
@@ -690,6 +709,35 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       
       rMeans_20 <- rowMeans(SWC[,sens2use & (plot_ind==3)], na.rm=T)
       obs_mean_20cm <- zoo(rMeans_20, time(SWC))
+    
+    # Soil Water Retention Curve for 5 and 20cm
+    
+    op <- par(mfrow=c(1,2))
+    
+    cm5  <- which.min(abs(soil_head-50))
+    cm20 <- which.min(abs(soil_head-200))
+    
+    # # add observed data: SWC vs. pF
+    #     if (i==B2)
+    #     {
+    #       obs_psi_5cm <-   swp5$psi_obs 
+    #       obs_psi_20cm <-  swp20$psi_obs 
+    #     } else {
+    #       obs_psi_5cm <- obs_psi_20cm <- NULL
+    #     }  
+    
+    GEOtop_VisSoilWaterRet(alpha = soil_input$alpha[cm5], n = soil_input$n[cm5], theta_sat = soil_input$vwc_s[cm5], theta_res = soil_input$vwc_r[cm5], 
+                           theta_pwp = soil_input$vwc_w[cm5], theta_fc = soil_input$vwc_fc[cm5], 
+                           observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE, main = "SoilWaterRetentionCurve 5cm")
+    
+    GEOtop_VisSoilWaterRet(alpha = soil_input$alpha[cm20], n = soil_input$n[cm20], theta_sat = soil_input$vwc_s[cm20], theta_res = soil_input$vwc_r[cm20], 
+                           theta_pwp = soil_input$vwc_w[cm20], theta_fc = soil_input$vwc_fc[cm20], 
+                           observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE, main = "SoilWaterRetentionCurve 20cm")
+    
+    par(op)
+    # Soil Water Content
+    plot.zoo(swc*100, main=paste(i, " | Soil Water Content"), ylim = c(0,max(swc*100, na.rm = T)),
+             ylab=paste(soil_head/1000,"m [vol%]",sep=""))
     
       if (i=="B1" | i=="B2" | i=="B3")
       {
