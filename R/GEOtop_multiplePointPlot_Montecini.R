@@ -633,9 +633,9 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       
       # scatterplot
      
-      op <- par(pty="s", mfrow=c(1,2), las=1)
       
-      plot(x = swp5$psi_sim, y =  swp5$psi_obs, ylim=c(0,7), xlim=c(0,7), ylab="observerd pF", xlab="simulated pF")
+      plot(x = swp5$psi_sim, y =  swp5$psi_obs, ylim=c(0,7), xlim=c(0,7), ylab="observerd pF", xlab="simulated pF", 
+           main="Water Potential sim vs. obs | 5cm")
       abline(a = 0,b = 1, col="grey", lty="dashed")
       abline(h=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
       abline(v=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
@@ -644,7 +644,8 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       text(x = 0, y = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
       text(y = 0, x = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
       
-      plot(x = swp20$psi_sim, y =  swp20$psi_obs, ylim=c(0,7), xlim=c(0,7), ylab="observerd pF", xlab="simulated pF")
+      plot(x = swp20$psi_sim, y =  swp20$psi_obs, ylim=c(0,7), xlim=c(0,7), ylab="observerd pF", xlab="simulated pF",
+           main="Water Potential sim vs. obs | 5cm")
       abline(a = 0,b = 1, col="grey", lty="dashed")
       abline(h=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
       abline(v=c(1.8,2.5,4.2), col=rgb(1,0,0,.3), lty="dashed")
@@ -653,7 +654,6 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       text(x = 0, y = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
       text(y = 0, x = c(1.8,2.5,4.2), labels = as.character(c(1.8,2.5,4.2)), col=rgb(1,0,0,.5))
       
-      par(op)
     }
     
     # read measured data
@@ -712,8 +712,6 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     
     # Soil Water Retention Curve for 5 and 20cm
     
-    op <- par(mfrow=c(1,2))
-    
     cm5  <- which.min(abs(soil_head-50))
     cm20 <- which.min(abs(soil_head-200))
     
@@ -734,7 +732,6 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                            theta_pwp = soil_input$vwc_w[cm20], theta_fc = soil_input$vwc_fc[cm20], 
                            observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE, main = "SoilWaterRetentionCurve 20cm")
     
-    par(op)
     # Soil Water Content
     plot.zoo(swc*100, main=paste(i, " | Soil Water Content"), ylim = c(0,max(swc*100, na.rm = T)),
              ylab=paste(soil_head/1000,"m [vol%]",sep=""))
