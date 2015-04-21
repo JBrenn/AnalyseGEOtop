@@ -19,7 +19,8 @@
 # theta_pwp <- soil_input$vwc_w[1]
 # theta_fc <- soil_input$vwc_fc[1]
 
-GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, observed=FALSE, add_ref_curves=TRUE, pdf=TRUE, accurate=10) 
+GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, observed=NULL, add_ref_curves=TRUE, pdf=TRUE, 
+                                   accurate=10, main="SoilWaterRetentionCurve") 
 {
   # soil water pressure head in centimeter
   psi <- seq(1,10000000,accurate)
@@ -40,11 +41,11 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
     par(new=TRUE)
     
     plot(psi, swc, type="l", xlab="pF", ylab="Soil Water Content  [volume %]", xaxt="n", log="x",
-         main=paste("SoilWaterRetentionCurve | alpha=", alpha, ", n=", n, ", res=", theta_res, ", sat=", theta_sat, sep=""), lwd=2,
+         main=paste(main, " | alpha=", alpha, ", n=", n, ", res=", theta_res, ", sat=", theta_sat, sep=""), lwd=2,
          ylim=c(0,60), xlim=c(1,10000000))
   } else {
     plot(psi, swc, type="l", xlab="pF", ylab="Soil Water Content  [volume %]", log="x", xaxt="n", 
-         main=paste("SoilWaterRetentionCurve | alpha=", alpha, ", n=", n, sep=""),
+         main=paste(main, " | alpha=", alpha, ", n=", n, sep=""),
          ylim=c(0,60), xlim=c(1,10000000) )
   }
   
