@@ -40,6 +40,9 @@ GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc,
   \item{accurate}{
   default = 10: water potential is given as \emph{seq(1,10^7,10)}, for accurate plotting set argument 1
 }
+  \item{main}{
+  an overall title for the plot, is followed by values of vanGenuchten parameters
+}
 
 }
 \details{
