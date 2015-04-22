@@ -223,11 +223,18 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     for (i in soil_header) soil_moist[[i]] <- soil_liq[[i]] + soil_ice[[i]]
     #   
     #----
-    # psi
+    # psi liquid
     print("... soil liquid water pressure for all layers")
     soil_liq_pressure <- list()
     for (i in soil_header)
       soil_liq_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilLiqWaterPressProfileFile", 
+                                                    varOFint=c(i))
+    
+    # psi total
+    print("... soil total water pressure for all layers")
+    soil_tot_pressure <- list()
+    for (i in soil_header)
+      soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilTotWaterPressProfileFile", 
                                                     varOFint=c(i))
     
     #-----
@@ -253,6 +260,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       data_list[[paste("soil_liq",soil_head[i],sep="_")]] <- soil_liq[[i]]
       data_list[[paste("SWC",soil_head[i],sep="_")]] <- soil_moist[[i]]
       data_list[[paste("PSI",soil_head[i],sep="_")]] <- soil_liq_pressure[[i]]
+      data_list[[paste("PSI_tot",soil_head[i],sep="_")]] <- soil_tot_pressure[[i]]
       data_list[[paste("soil_temp",soil_head[i],sep="_")]] <- soil_temp[[i]]
     }
     
@@ -288,11 +296,9 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     # read info for SWC input (measured data)
     # SWCinfo <- read.csv(file = "H:/Projekte/HydroAlp/06_Workspace/BrJ/03_R/GEOtopAnalyse/SWCinfo.txt")
     # SWCinfo <- read.csv2(file = "validation_data/SWCinfo.txt")
-    data(SWCinfo)
-    if (linux) SWCinfo <- SWCinfoLIN else SWCinfo <- SWCinfoWIN
 
     # save workspace
-    save(list = c("list_station","SWCinfo","soil_head","soil_header","wpath","fc","soil_input"), 
+    save(list = c("list_station","soil_head","soil_header","wpath","fc","soil_input"), 
          file = paste(wpath,"/point.RData",sep=""))
   } else {
     print("start reading point output data from formerly saved workspace")
@@ -304,6 +310,9 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
   # source functions 2
   #source("H:/Projekte/HiResAlp/06_Workspace/BrJ/04_R_data_analyses/data_base/getSWC.R")
   #source("H:/Projekte/HiResAlp/06_Workspace/BrJ/04_R_data_analyses/data_base/getSoilTemp.R")
+
+  data(SWCinfo)
+  if (linux) SWCinfo <- SWCinfoLIN else SWCinfo <- SWCinfoWIN
 
   for (i in stations)
   { 
@@ -354,7 +363,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       for (n in 3:length(soil_temp_labs)) soil_temp <- cbind(soil_temp, list_station[[i]][[soil_temp_labs[n]]])  
     names(soil_temp) <- soil_temp_labs
 
-    soil_psi_labs <- paste("PSI_", soil_head, sep="")
+    soil_psi_labs <- paste("PSI_tot", soil_head, sep="")
     soil_psi <- cbind(list_station[[i]][[soil_psi_labs[1]]], list_station[[i]][[soil_psi_labs[2]]])
     for (n in 3:length(soil_psi_labs)) soil_psi <- cbind(soil_psi, list_station[[i]][[soil_psi_labs[n]]])  
     names(soil_psi) <- soil_psi_labs
