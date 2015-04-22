@@ -216,12 +216,19 @@ GEOtop_Read_multipoint <- function(path, model_run, stations, val_aggr, soil_fil
     for (i in soil_header) soil_moist[[i]] <- soil_liq[[i]] + soil_ice[[i]]
     #   
     #----
-    # psi
+    # psi liquid
     print("... soil liquid water pressure for all layers")
     soil_liq_pressure <- list()
     for (i in soil_header)
       soil_liq_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilLiqWaterPressProfileFile", 
                                                   varOFint=c(i))
+  
+    # psi total
+    print("... soil total water pressure for all layers")
+    soil_tot_pressure <- list()
+    for (i in soil_header)
+      soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilTotWaterPressProfileFile", 
+                                                    varOFint=c(i))
     
     #-----
     # SOIL TEMPERATURE
@@ -246,6 +253,7 @@ GEOtop_Read_multipoint <- function(path, model_run, stations, val_aggr, soil_fil
       data_list[[paste("soil_liq",soil_head[i],sep="_")]] <- soil_liq[[i]]
       data_list[[paste("SWC",soil_head[i],sep="_")]] <- soil_moist[[i]]
       data_list[[paste("PSI",soil_head[i],sep="_")]] <- soil_liq_pressure[[i]]
+      data_list[[paste("PSI_tot",soil_head[i],sep="_")]] <- soil_tot_pressure[[i]]
       data_list[[paste("soil_temp",soil_head[i],sep="_")]] <- soil_temp[[i]]
     }
     
@@ -280,12 +288,10 @@ GEOtop_Read_multipoint <- function(path, model_run, stations, val_aggr, soil_fil
     
     # read info for SWC input (measured data)
     #SWCinfo <- read.csv(file = "H:/Projekte/HydroAlp/06_Workspace/BrJ/03_R/GEOtopAnalyse/SWCinfo.txt")
-    #SWCinfo <- read.csv2(file = "validation_data/SWCinfo.txt")
-    data(SWCinfo)
-    if (linux) SWCinfo <- SWCinfoLIN else SWCinfo <- SWCinfoWIN
+    #SWCinfo <- read.csv2(file = "validation_data/SWCinfo.txt"
     
     # save workspace
-    save(list = c("list_station","SWCinfo","soil_head","soil_header","wpath","fc","soil_input"), 
+    save(list = c("list_station","soil_head","soil_header","wpath","fc","soil_input"), 
          file = paste(wpath,"/point.RData",sep=""))
   
   return(list_station)
