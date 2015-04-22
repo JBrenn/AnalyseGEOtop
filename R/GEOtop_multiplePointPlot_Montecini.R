@@ -363,7 +363,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       for (n in 3:length(soil_temp_labs)) soil_temp <- cbind(soil_temp, list_station[[i]][[soil_temp_labs[n]]])  
     names(soil_temp) <- soil_temp_labs
 
-    soil_psi_labs <- paste("PSI_tot", soil_head, sep="")
+    soil_psi_labs <- paste("PSI_tot_", soil_head, sep="")
     soil_psi <- cbind(list_station[[i]][[soil_psi_labs[1]]], list_station[[i]][[soil_psi_labs[2]]])
     for (n in 3:length(soil_psi_labs)) soil_psi <- cbind(soil_psi, list_station[[i]][[soil_psi_labs[n]]])  
     names(soil_psi) <- soil_psi_labs
