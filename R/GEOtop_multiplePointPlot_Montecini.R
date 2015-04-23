@@ -451,8 +451,8 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
       
       # analysis & visualisation of residuals
-      r <- ET_mod - ET_obs
-      hydroplot(r, FUN=sum, var.unit = "mm")
+#       r <- ET_mod - ET_obs
+#       hydroplot(r, FUN=sum, var.unit = "mm")
       
       # avaraged daily cycle ET sim vs obs
       doy <- format(time(ET),"%j")
@@ -560,8 +560,8 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       ggof(sim=Energy_mod_naspl$LE, obs=Energy_obs_naspl$LE, ftype="ma", FUN=mean, ylab="LE [W/m²]",
            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
       
-      residual_LE <- Energy_mod_naspl$LE- Energy_obs_naspl$LE
-      hydroplot(residual_LE, FUN=sum, var.unit = "W/m²")
+#       residual_LE <- Energy_mod_naspl$LE- Energy_obs_naspl$LE
+#       hydroplot(residual_LE, FUN=sum, var.unit = "W/m²")
       
       ggof(sim=Energy_mod$H, obs=Energy_obs$H, ftype="o", FUN=mean, ylab="H [W/m²]",
            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
@@ -573,8 +573,8 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       ggof(sim=Energy_mod_naspl$H, obs=Energy_obs_naspl$H, ftype="ma", FUN=mean, ylab="H [W/m²]",
            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
       
-      residual_H  <- Energy_mod_naspl$H - Energy_obs_naspl$H
-      hydroplot(residual_H, FUN=sum, var.unit = "W/m²")
+#       residual_H  <- Energy_mod_naspl$H - Energy_obs_naspl$H
+#       hydroplot(residual_H, FUN=sum, var.unit = "W/m²")
       
     }
     

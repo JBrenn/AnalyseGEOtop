@@ -4,6 +4,7 @@
 import(geotopbricks)
 import(chron)
 import(zoo)
+import(hydroTSM)
 import(hydroGOF)
 import(soilwater)
 import(raster)

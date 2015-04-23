@@ -13,6 +13,7 @@ Imports:
     geotopbricks,
     chron,
     zoo,
+    hydroTSM,
     hydroGOF,
     soilwater,
     raster,
