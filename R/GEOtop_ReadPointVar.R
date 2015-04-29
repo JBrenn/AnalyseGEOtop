@@ -124,7 +124,7 @@ if (coordinates_value_df)
                                                tz="Etc/GMT+1")
 
 # read psi 
-  if (keyword=="SoilLiqWaterPressProfileFile" | keyword=="SoilLiqWaterPressProfileFile")
+  if (keyword=="SoilLiqWaterPressProfileFile" | keyword=="SoilTotWaterPressProfileFile")
     point_data <- get.geotop.inpts.keyword.value(keyword=keyword, wpath=wpath,
                                                  raster=FALSE,
                                                  data.frame=TRUE,
