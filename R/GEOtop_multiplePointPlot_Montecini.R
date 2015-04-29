@@ -180,14 +180,17 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     # output depth in mm
     soil_head <- diff(c(0,cumsum(soil_thickness)))/2 + c(0,cumsum(soil_thickness))[-length(soil_thickness)-1]
     
-    soil_header <- c()
-    for (i in 1:length(soil_head))
-    {
-      if (ceiling(soil_head[i])==soil_head[i]) {
-        soil_header[i] <- paste("X", soil_head[i], ".000000", sep="")
-      } else {
-        soil_header[i] <- paste("X", soil_head[i], "00000", sep="")  }     
-    } 
+    soil_file <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
+    soil_header <- names(soil_file)[-c(1:6)]
+    
+#     soil_header <- c()
+#     for (i in 1:length(soil_head))
+#     {
+#       if (ceiling(soil_head[i])==soil_head[i]) {
+#         soil_header[i] <- paste("X", soil_head[i], ".000000", sep="")
+#       } else {
+#         soil_header[i] <- paste("X", soil_head[i], "00000", sep="")  }     
+#     } 
     
     print("... soil liquid content for all layers")
     soil_liq <- list()
