@@ -448,10 +448,10 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       abline(0,1, lty=3, col=grey(.2,.5), lwd=2)
       
       ggof(sim=ET_mod, obs=ET_obs, ftype="o", FUN=sum, ylab="ET [mm]", 
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       ggof(sim=ET_mod, obs=ET_obs, ftype="ma", FUN=sum, ylab="ET [mm]", 
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # analysis & visualisation of residuals
 #       r <- ET_mod - ET_obs
@@ -554,27 +554,27 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       par(op)
       
       ggof(sim=Energy_mod$LE, obs=Energy_obs$LE, ftype="o", FUN=mean, ylab="LE [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       ggof(sim=Energy_mod_naspl$LE, obs=Energy_obs_naspl$LE, ftype="o", FUN=mean, ylab="LE [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       ggof(sim=Energy_mod$LE, obs=Energy_obs$LE, ftype="ma", FUN=mean, ylab="LE [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       ggof(sim=Energy_mod_naspl$LE, obs=Energy_obs_naspl$LE, ftype="ma", FUN=mean, ylab="LE [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
 #       residual_LE <- Energy_mod_naspl$LE- Energy_obs_naspl$LE
 #       hydroplot(residual_LE, FUN=sum, var.unit = "W/m²")
       
       ggof(sim=Energy_mod$H, obs=Energy_obs$H, ftype="o", FUN=mean, ylab="H [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       ggof(sim=Energy_mod_naspl$H, obs=Energy_obs_naspl$H, ftype="o", FUN=mean, ylab="H [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       ggof(sim=Energy_mod$H, obs=Energy_obs$H, ftype="ma", FUN=mean, ylab="H [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       ggof(sim=Energy_mod_naspl$H, obs=Energy_obs_naspl$H, ftype="ma", FUN=mean, ylab="H [W/m²]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
 #       residual_H  <- Energy_mod_naspl$H - Energy_obs_naspl$H
 #       hydroplot(residual_H, FUN=sum, var.unit = "W/m²")
@@ -637,11 +637,11 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       
       ggof(sim = swp5$psi_sim, obs = swp5$psi_obs,
            ftype="o", FUN=mean, ylab="pF in 5cm depth [-]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       ggof(sim = swp20$psi_sim, obs = swp20$psi_obs,
            ftype="o", FUN=mean, ylab="pF in 20cm depth [-]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # scatterplot
      
@@ -882,7 +882,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
        swc2 <- merge(obs_mean_2cm,soil_liq2)
        ggof(sim = swc2$soil_liq2, swc2$obs_mean_2cm,
             ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
      
       rMeans_5 <- rowMeans(SWC[,sens2use & (plot_ind==2)], na.rm=F)
        obs_mean_5cm <- zoo(rMeans_5, time(SWC))
@@ -893,12 +893,12 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
        swc5 <- merge(obs_mean_5cm,soil_liq5)
        ggof(sim = swc5$soil_liq5, obs = swc5$obs_mean_5cm,
             ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
        
        swc20 <- merge(obs_mean_20cm,soil_liq20)
        ggof(sim = swc20$soil_liq20, obs = swc20$obs_mean_20cm,
             ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
      }
      if (i=="I3")
      {
@@ -911,12 +911,12 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
        swc5 <- merge(obs_mean_5cm,soil_liq5)
        ggof(sim = swc5$soil_liq5, obs = swc5$obs_mean_5cm,
             ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
        
        swc20 <- merge(obs_mean_20cm,soil_liq20)
        ggof(sim = swc20$soil_liq20, obs = swc20$obs_mean_20cm,
             ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
      }
      if (i=="B1" | i=="B2" | i=="B3")
      {
@@ -924,20 +924,20 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
        swc5 <- merge(obs_mean_5cm,soil_liq5)
        ggof(sim = swc5$soil_liq5, obs = swc5$obs_mean_5cm,
             ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
        if (val_aggr=="d")
        ggof(sim = swc5$soil_liq5, obs = swc5$obs_mean_5cm,
             ftype="dm", FUN=mean, ylab="VWC [10²vol%]",
-            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+            gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
        # 20cm
        swc20 <- merge(obs_mean_20cm,soil_liq20)
        ggof(sim = swc20$soil_liq20, obs = swc20$obs_mean_20cm,
                  ftype="o", FUN=mean, ylab="VWC [10²vol%]",
-                 gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+                 gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
        if (val_aggr=="d")
        ggof(sim = swc20$soil_liq20, obs = swc20$obs_mean_20cm,
                  ftype="dm", FUN=mean, ylab="VWC [10²vol%]",
-                 gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))  
+                 gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))  
      }
 
 # soil temperature
@@ -1013,51 +1013,51 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       soil_temp0 <- merge(soil_temp0_sim,soil_temp0_obs)
       ggof(sim = soil_temp0$soil_temp0_sim, obs = soil_temp0$soil_temp0_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp0$soil_temp0_sim, obs = soil_temp0$soil_temp0_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # 5cm
       soil_temp5 <- merge(soil_temp5_sim,soil_temp5_obs)
       ggof(sim = soil_temp5$soil_temp5_sim, obs = soil_temp5$soil_temp5_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp5$soil_temp5_sim, obs = soil_temp0$soil_temp5_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       #10cm
       soil_temp10 <- merge(soil_temp10_sim,soil_temp10_obs)
       ggof(sim = soil_temp10$soil_temp10_sim, obs = soil_temp10$soil_temp10_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp10$soil_temp10_sim, obs = soil_temp10$soil_temp10_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # 20cm
       soil_temp20 <- merge(soil_temp20_sim,soil_temp20_obs)
       ggof(sim = soil_temp20$soil_temp20_sim, obs = soil_temp20$soil_temp20_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp20$soil_temp20_sim, obs = soil_temp20$soil_temp20_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # 50cm
       soil_temp50 <- merge(soil_temp50_sim,soil_temp50_obs)
       ggof(sim = soil_temp50$soil_temp50_sim, obs = soil_temp50$soil_temp50_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp50$soil_temp50_sim, obs = soil_temp50$soil_temp50_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
     }
 
     if (i=="P2") {
@@ -1065,31 +1065,31 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
       soil_temp2 <- merge(soil_temp2_sim,soil_temp2_obs)
       ggof(sim = soil_temp2$soil_temp2_sim, obs = soil_temp2$soil_temp2_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp2$soil_temp2_sim, obs = soil_temp2$soil_temp2_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # 5cm
       soil_temp5 <- merge(soil_temp5_sim,soil_temp5_obs)
       ggof(sim = soil_temp5$soil_temp5_sim, obs = soil_temp5$soil_temp5_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp5$soil_temp5_sim, obs = soil_temp0$soil_temp5_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs =c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       
       # 20cm
       soil_temp20 <- merge(soil_temp20_sim,soil_temp20_obs)
       ggof(sim = soil_temp20$soil_temp20_sim, obs = soil_temp20$soil_temp20_obs,
            ftype="o", FUN=mean, ylab="soilT [degC]",
-           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+           gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
       if (val_aggr=="d")
         ggof(sim = soil_temp20$soil_temp20_sim, obs = soil_temp20$soil_temp20_obs,
              ftype="dm", FUN=mean, ylab="soilT [degC]",
-             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS"))
+             gofs = c("MAE", "RMSE", "NRMSE", "NSE", "PBIAS", "r" , "KGE"))
     }
 
     dev.off()
