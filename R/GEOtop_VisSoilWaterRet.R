@@ -18,19 +18,21 @@
 # theta_res <- soil_input$vwc_r[1]
 # theta_pwp <- soil_input$vwc_w[1]
 # theta_fc <- soil_input$vwc_fc[1]
+# ksat <- soil_input$Kh[1]
 
 GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, observed=NULL, add_ref_curves=TRUE, pdf=TRUE, 
-                                   accurate=10, main="SoilWaterRetentionCurve") 
+                                   accurate=10, main="SoilWaterRetentionCurve", ksat) 
 {
   # soil water pressure head in centimeter
   psi <- seq(1,10000000,accurate)
    
   # volumetric soil water content in %
   swc <- swc(psi = -psi, alpha = alpha, n = n, theta_sat = theta_sat, theta_res = theta_res) *100
+  khy <- khy(psi = -psi, v = 0.5, ksat = ksat, alpha = alpha, n = n, theta_sat = theta_sat, theta_res = theta_res)
   
   if (pdf) pdf("./SoilWaterRetentionCurve.pdf")
   
-    op <- par(las=1, pty="s")
+    op <- par(las=1, pty="s", mar=c(5,4,4,5)+.1)
     # swc vs. log(psi) = pF
   if (!is.null(observed))
   {
@@ -40,13 +42,37 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
     
     par(new=TRUE)
     
-    plot(psi, swc, type="l", xlab="pF", ylab="Soil Water Content  [volume %]", xaxt="n", log="x",
-         main=paste(main, " | alpha=", alpha, ", n=", n, ", res=", theta_res, ", sat=", theta_sat, sep=""), lwd=2,
-         ylim=c(0,60), xlim=c(1,10000000))
-  } else {
-    plot(psi, swc, type="l", xlab="pF", ylab="Soil Water Content  [volume %]", log="x", xaxt="n", 
-         main=paste(main, " | alpha=", alpha, ", n=", n, sep=""),
+    plot(psi, swc, type="l", xlab="pF", ylab="", log="x", xaxt="n", 
+         main=paste(main, " | alpha=", alpha, ", n=", n, sep=""), lwd=2,
          ylim=c(0,60), xlim=c(1,10000000) )
+    
+    par(new=TRUE)
+    
+    plot(psi, khy, type="l", xlab="", ylab="", log="x", xaxt="n", yaxt="n", bty="n",
+         main="", col="grey", lwd=2,
+         xlim=c(1,10000000) )
+    
+    axis(4, col="grey", col.ticks = "grey", col.axis="grey")
+    
+    legend("topright",legend = c("Soil Water Content  [volume %]","Hydraulic Conductivity [mm/s]"),col=c("black","grey"),
+           lwd=3,bty="n", text.col = c("black","grey"))
+    
+  } else {
+    plot(psi, swc, type="l", xlab="pF", ylab="", log="x", xaxt="n", 
+         main=paste(main, " | alpha=", alpha, ", n=", n, sep=""), lwd=2,
+         ylim=c(0,60), xlim=c(1,10000000) )
+    
+    par(new=TRUE)
+    
+    plot(psi, khy, type="l", xlab="", ylab="", log="x", xaxt="n", yaxt="n", bty="n",
+         main="", col="grey", lwd=2,
+         xlim=c(1,10000000) )
+    
+    axis(4, col="grey", col.ticks = "grey", col.axis="grey")
+    
+    legend("topright",legend = c("Soil Water Content  [volume %]","Hydraulic Conductivity [mm/s]"),col=c("black","grey"),
+           lwd=3,bty="n", text.col = c("black","grey"))
+    
   }
   
   if (add_ref_curves)
@@ -94,10 +120,10 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
          col=c(rgb(1,0,0,.75),rgb(1,0,0,.75),"grey30","grey30"))
     
     # text theortical field capacity and permanent wilting point
-    text(x = c(10^2.15,10^4.2), y=61, labels = c("FC","PWP"), col="grey30")
+    #text(x = c(10^2.15,10^4.2), y=61, labels = c("FC","PWP"), col="grey30")
     text(x = c(10^1.8,10^2.5,10^4.2), y=-1, labels = c("1.8","2.5","4.2"), col="grey30")
   
-    legend(x=150000, y=60, legend = "estimation", col="black", lwd=3, bty="n")  
+    #legend(x=150000, y=60, legend = "estimation", col="black", lwd=3, bty="n")  
   
     if(!is.null(observed))
     {
