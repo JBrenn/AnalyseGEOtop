@@ -9,7 +9,8 @@ Visulisation of the Soil Water Retention Curve (van Genuchten 1980) for soil par
 }
 \usage{
 GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, 
-                        observed=FALSE, add_ref_curves=TRUE, pdf=TRUE, accurate=10)
+                        observed=FALSE, add_ref_curves=TRUE, pdf=TRUE, accurate=10, 
+                        main, ksat)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,7 +42,10 @@ GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc,
   default = 10: water potential is given as \emph{seq(1,10^7,10)}, for accurate plotting set argument 1
 }
   \item{main}{
-  an overall title for the plot, is followed by values of vanGenuchten parameters
+  an overall title for the plot, is followed by values of vanGenuchten parameters, default = "SoilWaterRetentionCurve"
+}
+  \item{ksat}{
+  saturated hydraulic conductivity [mm/s]
 }
 
 }
