@@ -234,11 +234,11 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                                                     varOFint=c(i))
     
     # psi total
-    print("... soil total water pressure for all layers")
-    soil_tot_pressure <- list()
-    for (i in soil_header)
-      soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilTotWaterPressProfileFile", 
-                                                    varOFint=c(i))
+      print("... soil total water pressure for all layers")
+      soil_tot_pressure <- list()
+      for (i in soil_header)
+        soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilLiqWaterPressProfileFile", 
+                                                      varOFint=c(i))
     
     #-----
     # SOIL TEMPERATURE
