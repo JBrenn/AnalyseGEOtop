@@ -234,7 +234,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                                                     varOFint=c(i))
     
     # psi total
-      print("... soil total water pressure for all layers")
+      print("... soil liquid water pressure for all layers")
       soil_tot_pressure <- list()
       for (i in soil_header)
         soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilLiqWaterPressProfileFile", 
@@ -386,7 +386,7 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
              xlab="", sub="x")
     text(x=0.25, y=0.52, labels = text[1], cex = 0.8)
     for (t in 2:length(text)) text(x=0.15*(t-1), y=0.48, labels = text[t], cex = 0.8) 
-    legend(x = 0.05, y = .45, legend = c("RAIN", "SNOW"), col=c(rgb(0,0,.8,.5), grey(.2,.5)), lwd=3, bty = "n", horiz = T, )
+    legend(x = 0.05, y = .45, legend = c("RAIN", "SNOW"), col=c(rgb(0,0,.8,.5), grey(.2,.5)), lwd=3, bty = "n", horiz = T)
     # add yearly precip sum
    
     # Evapotranspiration
@@ -738,11 +738,11 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     
     GEOtop_VisSoilWaterRet(alpha = soil_input$alpha[cm5], n = soil_input$n[cm5], theta_sat = soil_input$vwc_s[cm5], theta_res = soil_input$vwc_r[cm5], 
                            theta_pwp = soil_input$vwc_w[cm5], theta_fc = soil_input$vwc_fc[cm5], 
-                           observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE, main = "SoilWaterRetentionCurve 5cm")
+                           observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE)
     
     GEOtop_VisSoilWaterRet(alpha = soil_input$alpha[cm20], n = soil_input$n[cm20], theta_sat = soil_input$vwc_s[cm20], theta_res = soil_input$vwc_r[cm20], 
                            theta_pwp = soil_input$vwc_w[cm20], theta_fc = soil_input$vwc_fc[cm20], 
-                           observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE, main = "SoilWaterRetentionCurve 20cm")
+                           observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE)
     
     # Soil Water Content
     plot.zoo(swc*100, main=paste(i, " | Soil Water Content"), ylim = c(0,max(swc*100, na.rm = T)),
