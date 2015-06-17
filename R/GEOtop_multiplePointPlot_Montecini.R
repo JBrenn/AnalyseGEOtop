@@ -737,11 +737,11 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
     #     }  
     
     GEOtop_VisSoilWaterRet(alpha = soil_input$alpha[cm5], n = soil_input$n[cm5], theta_sat = soil_input$vwc_s[cm5], theta_res = soil_input$vwc_r[cm5], 
-                           theta_pwp = soil_input$vwc_w[cm5], theta_fc = soil_input$vwc_fc[cm5], 
+                           theta_pwp = soil_input$vwc_w[cm5], theta_fc = soil_input$vwc_fc[cm5], ksat = soil_input$Kv[cm5],
                            observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE)
     
     GEOtop_VisSoilWaterRet(alpha = soil_input$alpha[cm20], n = soil_input$n[cm20], theta_sat = soil_input$vwc_s[cm20], theta_res = soil_input$vwc_r[cm20], 
-                           theta_pwp = soil_input$vwc_w[cm20], theta_fc = soil_input$vwc_fc[cm20], 
+                           theta_pwp = soil_input$vwc_w[cm20], theta_fc = soil_input$vwc_fc[cm20], ksat = soil_input$Kv[cm20],
                            observed = NULL, add_ref_curves = T, accurate = 1, pdf = FALSE)
     
     # Soil Water Content
