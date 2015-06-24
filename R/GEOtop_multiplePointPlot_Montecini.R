@@ -129,7 +129,6 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                                  varOFint=c("LEg_veg.W.m2."))
     LEg_unveg <- GEOtop_ReadPointVar(wpath=wpath, keyword="PointOutputFile",
                                  varOFint=c("LEg_unveg.W.m2."))
-    
     LE_soil <- GEOtop_ReadPointVar(wpath=wpath, keyword="PointOutputFile",
                                varOFint=c("LE.W.m2."))
     
@@ -141,7 +140,6 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                                 varOFint=c("Hg_veg.W.m2."))
     Hg_unveg <- GEOtop_ReadPointVar(wpath=wpath, keyword="PointOutputFile",
                                 varOFint=c("Hg_unveg.W.m2."))
-    
     H_soil  <- GEOtop_ReadPointVar(wpath=wpath, keyword="PointOutputFile",
                                varOFint=c("H.W.m2."))  
     
@@ -234,10 +232,10 @@ GEOtop_multiplePointPlot_Montecini <- function(path, model_run, stations,
                                                     varOFint=c(i))
     
     # psi total
-      print("... soil liquid water pressure for all layers")
+      print("... soil total water pressure for all layers")
       soil_tot_pressure <- list()
       for (i in soil_header)
-        soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilLiqWaterPressProfileFile", 
+        soil_tot_pressure[[i]] <- GEOtop_ReadPointVar(wpath=wpath, keyword="SoilTotWaterPressProfileFile", 
                                                       varOFint=c(i))
     
     #-----
