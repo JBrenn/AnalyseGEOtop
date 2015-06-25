@@ -20,4 +20,4 @@ Imports:
     ggplot2,
     xts,
     RSAGA,
-    stingr
+    stringr
