@@ -19,4 +19,5 @@ Imports:
     sp,
     ggplot2,
     xts,
-    RSAGA
+    RSAGA,
+    stingr

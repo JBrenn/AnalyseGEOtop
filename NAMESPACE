@@ -11,6 +11,7 @@ import(sp)
 import(ggplot2)
 import(xts)
 import(RSAGA)
+import(stringr)
 
 # Export all names
 exportPattern(".")
