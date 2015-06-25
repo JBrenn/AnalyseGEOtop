@@ -1,10 +1,10 @@
 # Function to load GEOtop point simulation output based on observations
 
-# wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_011/"
-# data("observations_B2")
-# obs   <- list(hour=B2_h, day=B2_d)
+wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_011/"
+data("observations_B2")
+obs   <- list(hour=B2_h, day=B2_d)
 
-GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE)
+GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save_rData=TRUE)
 {
   # source lookup_tbl
   data(lookup_tbl_observation)
@@ -126,14 +126,14 @@ GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE)
   }  
   
 # soil water pressure  
-  if (length(sapply(df_names, grep, pattern="iquid_soil_water_pressure", value=T)) > 1)
+  if (length(sapply(df_names, grep, pattern="liquid_soil_water_pressure", value=T)) > 1)
   {
     soil_file <- get.geotop.inpts.keyword.value(keyword="SoilLiqWaterPressProfileFile", wpath=wpath, data.frame=TRUE)
     
-    names <- sapply(df_names, grep, pattern="iquid_soil_water_pressure", value=T)
+    names <- sapply(df_names, grep, pattern="liquid_soil_water_pressure", value=T)
     strsplit_names <- str_split(names,"_")
     split_mat <- matrix(unlist(strsplit_names),nrow = length(names), ncol=length(strsplit_names[[1]]), byrow = T)
-    depth_mm <- as.integer(unique(split_mat[,4]))
+    depth_mm <- as.integer(unique(split_mat[,5]))
     choice <- sapply(depth_mm, function(x) which.min(abs(soil_head-x)))
     
     soil_data <- zoo(soil_file[,soil_header[choice]], soil_time)
@@ -148,13 +148,13 @@ GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE)
     names <- sapply(df_names, grep, pattern="soil_temperature", value=T)
     strsplit_names <- str_split(names,"_")
     split_mat <- matrix(unlist(strsplit_names),nrow = length(names), ncol=length(strsplit_names[[1]]), byrow = T)
-    depth_mm <- as.integer(unique(split_mat[,4]))
+    depth_mm <- as.integer(unique(split_mat[,3]))
     choice <- sapply(depth_mm, function(x) which.min(abs(soil_head-x)))
     
     soil_data <- zoo(soil_file[,soil_header[choice]], soil_time)
     for (i in 1:length(depth_mm)) var_out[[paste("soil_temperature", depth_mm[i], sep="")]] <- soil_data[,i]
   }
   
-  
+  if(save_rData) save("var_out", file = file.path(wpath,"PointOutValidation.RData"))
   return(var_out)
 }

@@ -19,6 +19,9 @@ zoo object, data frame, with specific names of variables used for validate the m
  \item{soil_files}{
   boolean, TRUE: soil files are provided as GEOtop input. FALSE: soil is parameterized in the geotop.inpts file
 }
+\item{save_rData}{
+boolean, if TRUE (default) data is stored in working directory (simulation folder)
+}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
