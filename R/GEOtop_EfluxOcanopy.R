@@ -5,9 +5,9 @@ GEOtop_EfluxOcanopy <- function(data, canopy_fraction=NULL)
   for (i in names(data)) 
   {
     if (!is.null(canopy_fraction)) {
-      overcanopy[[i]] <- canopy_fraction * (data[[i]]$g_veg + data[[i]]$v) + (1-canopy_fraction) * data[[i]]$g_unveg
+      overcanopy[[i]] <- canopy_fraction * (data[[i]]$g_veg + data[[i]]$veg) + (1-canopy_fraction) * data[[i]]$g_unveg
     } else {
-      overcanopy[[i]] <- data[[i]]$cf * (data[[i]]$g_veg + data[[i]]$v) + (1-data[[i]]$cf) * data[[i]]$g_unveg
+      overcanopy[[i]] <- data[[i]]$cf * (data[[i]]$g_veg + data[[i]]$veg) + (1-data[[i]]$cf) * data[[i]]$g_unveg
     }
   }
   

@@ -11,7 +11,7 @@ GEOtop_EfluxOcanopy(data, canopy_fraction=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{list, containing zoo objects of latent and sensible heat fluxes (ground veg - g_veg, ground bare - g_unveg, canopy - v); list names: "LE"  and "H", zoo header refers to GEOtop point file
+  \item{data}{list, containing zoo objects of latent and sensible heat fluxes (ground veg - g_veg, ground bare - g_unveg, canopy - veg, canopy fraction - cf); list names: "LE"  and "H", zoo header refers to GEOtop point file
 }
   \item{canopy_fraction}{numeric, default = NULL, canopy fraction for simulation point, set if not available from simulation point output}
 }
