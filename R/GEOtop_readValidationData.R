@@ -1,8 +1,8 @@
 # Function to load GEOtop point simulation output based on observations
 
-wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_011/"
-data("observations_B2")
-obs   <- list(hour=B2_h, day=B2_d)
+# wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
+# data("observations_B2")
+# obs   <- list(hour=B2_h, day=B2_d)
 
 GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save_rData=TRUE)
 {

@@ -1,2 +1,4 @@
-observed_mrd
-B2_VolSoilMoisture
+observations_B2
+lookup_tbl_observation
+SWCinfo
+validation

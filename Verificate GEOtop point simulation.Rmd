@@ -55,9 +55,9 @@ inputPanel(
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day"), selected = "day", inline = FALSE),
   
-  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE),
+  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE)
   
-  submitButton(text = "apply changes")
+  #submitButton(text = "apply changes")
   
 )
 
