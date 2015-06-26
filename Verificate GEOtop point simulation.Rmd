@@ -38,8 +38,10 @@ if(!require(hydroGOF))
   require(hydroGOF)
 }
 
-data("PointOutValidation_sim0011_1D_HiResAlp")
+data("PointOutValidation_sim0007_1D_HiResAlp")
+#data("PointOutValidation_sim0011_1D_HiResAlp")
 data("observations_B2")
+data("lookup_tbl_observation")
 
 obs <- list(hour=B2_h, day=B2_d)
 
@@ -53,7 +55,7 @@ inputPanel(
   
   selectInput(inputId = "variable", label = "discover variable", choices = names(B2_d)),
   
-  radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day"), selected = "day", inline = FALSE),
+  radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
   radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE)
   
@@ -68,16 +70,36 @@ inputPanel(
 ```{r, echo=FALSE}
 
 renderDygraph({
-  observation <- obs[[input$aggregation]][,input$variable]
+  if (input$aggregation=="hour" | input$aggregation=="day")
+  {
+    observation <- obs[[input$aggregation]][,input$variable]
+  } else observation <- obs[["day"]][,input$variable]
   
   simulation <- var_out[[input$variable]]
   
-  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean) 
-  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum)
+  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
+  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
+  if (input$aggregation=="month" & input$flux_amount=="flux") 
+  {
+    simulation <- aggregate(simulation, as.yearmon(time(simulation)), mean, na.rm=T)
+    observation <- aggregate(observation, as.yearmon(time(observation)), mean, na.rm=T)
+  } 
+  if (input$aggregation=="month" & input$flux_amount=="amount") 
+  {
+    simulation <- aggregate(simulation, as.yearmon(time(simulation)), sum, na.rm=F)
+    observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
+  } 
   
   data <- merge(observation, simulation)
   
-  dygraph(data) %>%
+  name <- input$variable
+  if (grepl("soil_moisture_content",input$variable)) name <- "soil_moisture_content"
+  if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
+  if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
+   
+  units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
+  
+  dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
     dyRangeSelector() %>%
     dyRoller()
     
@@ -90,12 +112,25 @@ renderDygraph({
 ```{r, echo=FALSE}
 
 renderDataTable({
-  observation <- obs[[input$aggregation]][,input$variable]
+ if (input$aggregation=="hour" | input$aggregation=="day")
+  {
+    observation <- obs[[input$aggregation]][,input$variable]
+  } else observation <- obs[["day"]][,input$variable]
   
   simulation <- var_out[[input$variable]]
   
-  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean) 
-  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum)
+ if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
+  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
+  if (input$aggregation=="month" & input$flux_amount=="flux") 
+  {
+    simulation <- aggregate(simulation, as.yearmon(time(simulation)), mean, na.rm=T)
+    observation <- aggregate(observation, as.yearmon(time(observation)), mean, na.rm=T)
+  } 
+  if (input$aggregation=="month" & input$flux_amount=="amount") 
+  {
+    simulation <- aggregate(simulation, as.yearmon(time(simulation)), sum, na.rm=F)
+    observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
+  } 
   
   data <- merge(observation, simulation)
   
