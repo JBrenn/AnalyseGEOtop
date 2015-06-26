@@ -142,6 +142,6 @@ renderDataTable({
   names(gofs) <- "VALUE"
   gofs$GOF <- dimnames(gofs)[[1]]
   gofs <- gofs[,c(2,1)]
-})
+}, options = list(pageLength=5, lengthMenu=c(5, 10, 20, 30)))
 
 ```
