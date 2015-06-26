@@ -12,48 +12,98 @@ This R Markdown document is made interactive using Shiny. To learn more, see [In
 
 ***
 
-## Inputs and Outputs
+```{r, include=FALSE}
 
-You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
+
+if(!require(AnalyseGeotop))
+{
+  if(!require(devtools))
+  {
+    install.packages(devtools)
+    require(devtools)
+  }
+  install_github("AnalyseGeotop", "JBrenn")
+  require(AnalyseGeotop)
+}
+
+if(!require(dygraphs))
+{
+  install.packages(dygraphs)
+  require(dygraphs)
+}
+
+if(!require(hydroGOF))
+{
+  install.packages(hydroGOF)
+  require(hydroGOF)
+}
+
+data("PointOutValidation_sim0011_1D_HiResAlp")
+data("observations_B2")
+
+obs <- list(hour=B2_h, day=B2_d)
+
+```
+
+## Inputs and Output
 
 ```{r, echo=FALSE}
 inputPanel(
-  select
+  #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
   
-  selectInput("n_breaks", label = "Number of bins:",
-              choices = c(10, 20, 35, 50), selected = 20),
+  selectInput(inputId = "variable", label = "discover variable", choices = names(B2_d)),
   
-  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
-              min = 0.2, max = 2, value = 1, step = 0.2)
+  radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day"), selected = "day", inline = FALSE),
+  
+  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE),
+  
+  submitButton(text = "apply changes")
+  
 )
 
-renderPlot({
-  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
-       xlab = "Duration (minutes)", main = "Geyser eruption duration")
-  
-  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
-  lines(dens, col = "blue")
-})
 ```
 
-## Embedded Application
-
-It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+***
 
 ```{r, echo=FALSE}
-shinyAppDir(
-  system.file("examples/06_tabsets", package="shiny"),
-  options=list(
-    width="100%", height=550
-  )
-)
+
+renderDygraph({
+  observation <- obs[[input$aggregation]][,input$variable]
+  
+  simulation <- var_out[[input$variable]]
+  
+  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean) 
+  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum)
+  
+  data <- merge(observation, simulation)
+  
+  dygraph(data) %>%
+    dyRangeSelector() %>%
+    dyRoller()
+    
+})
+
 ```
 
-Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+***
 
-You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+```{r, echo=FALSE}
 
-In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+renderDataTable({
+  observation <- obs[[input$aggregation]][,input$variable]
+  
+  simulation <- var_out[[input$variable]]
+  
+  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean) 
+  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum)
+  
+  data <- merge(observation, simulation)
+  
+  gofs <- gof(sim = data$simulation, obs=data$observation, na.rm = T)
+  gofs <- as.data.frame(gofs)
+  names(gofs) <- "VALUE"
+  gofs$GOF <- dimnames(gofs)[[1]]
+  gofs <- gofs[,c(2,1)]
+})
 
-
-
+```
