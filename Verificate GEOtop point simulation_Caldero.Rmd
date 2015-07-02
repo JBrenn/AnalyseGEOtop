@@ -14,7 +14,6 @@ This R Markdown document is made interactive using Shiny. To learn more, see [In
 
 ```{r, include=FALSE}
 
-
 if(!require(AnalyseGeotop))
 {
   if(!require(devtools))
@@ -41,15 +40,15 @@ if(!require(hydroGOF))
 data("PointOutValidation")
 
 data("observations_Caldero")
-data("observations_B2")
+
 data("lookup_tbl_observation")
 
 var_out <- sim0001_Caldero
 
-#time(B2_h)$mday <- time(B2_h)$mday - 1
-#time(B2_d) <- time(B2_d) - 1
+time(Caldero_30min)$mday <- time(Caldero_30min)$mday - 1
+time(Caldero_d) <- time(Caldero_d) - 1
 
-#obs <- list(hour=B2_h, day=B2_d)
+obs <- list(hour=Caldero_30min, day=Caldero_d)
 
 ```
 
