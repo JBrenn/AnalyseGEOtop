@@ -38,13 +38,13 @@ if(!require(hydroGOF))
   require(hydroGOF)
 }
 
-data("PointOutValidation_sim0007_Montecini")
+data("PointOutValidation_sim0001_Caldero")
 #data("PointOutValidation_sim0011_1D_HiResAlp")
-data("observations_B2")
+data("observations_Caldero")
 data("lookup_tbl_observation")
 
-time(B2_h)$mday <- time(B2_h)$mday - 1
-time(B2_d) <- time(B2_d) - 1
+#time(B2_h)$mday <- time(B2_h)$mday - 1
+#time(B2_d) <- time(B2_d) - 1
 
 obs <- list(hour=B2_h, day=B2_d)
 
