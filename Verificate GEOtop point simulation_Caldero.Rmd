@@ -38,15 +38,18 @@ if(!require(hydroGOF))
   require(hydroGOF)
 }
 
-data("PointOutValidation_sim0001_Caldero")
+data("PointOutValidation")
 
 data("observations_Caldero")
+data("observations_B2")
 data("lookup_tbl_observation")
+
+var_out <- sim0001_Caldero
 
 #time(B2_h)$mday <- time(B2_h)$mday - 1
 #time(B2_d) <- time(B2_d) - 1
 
-obs <- list(hour=B2_h, day=B2_d)
+#obs <- list(hour=B2_h, day=B2_d)
 
 ```
 
@@ -56,7 +59,7 @@ obs <- list(hour=B2_h, day=B2_d)
 inputPanel(
   #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
   
-  selectInput(inputId = "variable", label = "discover variable", choices = names(B2_d)),
+  selectInput(inputId = "variable", label = "discover variable", choices = names(Caldero_30min)),
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
