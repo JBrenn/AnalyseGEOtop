@@ -130,14 +130,9 @@ renderDygraph({
       dyRangeSelector() %>%
       dyRoller()
   } else {
-    if (input$aggregation=="hour") 
-    {
-      index(observation) <- as.POSIXct(index(observation))
-      data <- merge(observation, simulation)
-    } else {
-       data <- merge(observation, simulation)
-    }
-   
+    
+    data <- merge(observation, simulation)
+    
     dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
       dyRangeSelector() %>%
       dyRoller()
