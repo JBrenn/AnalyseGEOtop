@@ -59,7 +59,7 @@ obs <- list(hour=Caldero_30min, day=Caldero_d)
 inputPanel(
   #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
   
-  selectInput(inputId = "variable", label = "discover variable", choices = names(Caldero_30min), selected = "air_temperature"),
+  selectInput(inputId = "variable", label = "discover variable", choices = names(Caldero_d), selected = "air_temperature"),
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
