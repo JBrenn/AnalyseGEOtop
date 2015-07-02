@@ -59,7 +59,7 @@ obs <- list(hour=Caldero_30min, day=Caldero_d)
 inputPanel(
   #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
   
-  selectInput(inputId = "variable", label = "discover variable", choices = names(Caldero_30min)),
+  selectInput(inputId = "variable", label = "discover variable", choices = names(Caldero_30min), selected = "air_temperature"),
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
@@ -82,6 +82,20 @@ Cumulated timeseries are only provided for daily data aggregation. Check if your
 ```{r, echo=FALSE}
 
 renderDygraph({
+  
+  name <- input$variable
+  if (grepl("soil_moisture_content",input$variable)) name <- "soil_moisture_content"
+  if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
+  if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
+  
+  if(name=="soil_moisture_content" & length(strsplit(x = input$variable, split = "_")[[1]])==5) 
+    {
+      spl <- strsplit(x = input$variable, split = "_")[[1]]
+      input$variable <- paste(spl[1],spl[2],spl[3],spl[4], sep = "_")
+    }
+   
+  units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
+  
   if (input$aggregation=="hour" | input$aggregation=="day")
   {
     observation <- obs[[input$aggregation]][,input$variable]
@@ -103,13 +117,6 @@ renderDygraph({
   } 
   
  # data <- merge(observation, simulation)
-  
-  name <- input$variable
-  if (grepl("soil_moisture_content",input$variable)) name <- "soil_moisture_content"
-  if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
-  if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
-   
-  units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
   
   if (input$cum == "cumulated over time")
   {
