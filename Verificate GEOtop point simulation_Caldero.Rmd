@@ -87,12 +87,6 @@ renderDygraph({
   if (grepl("soil_moisture_content",input$variable)) name <- "soil_moisture_content"
   if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
   if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
-  
-  if(name=="soil_moisture_content" & length(strsplit(x = input$variable, split = "_")[[1]])==5) 
-    {
-      spl <- strsplit(x = input$variable, split = "_")[[1]]
-      input$variable <- paste(spl[1],spl[2],spl[3],spl[4], sep = "_")
-    }
    
   units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
   
@@ -118,7 +112,7 @@ renderDygraph({
   
  # data <- merge(observation, simulation)
   
-  if (input$cum == "cumulated over time")
+  if (input$cum == "cumulated over time" & input$aggregation=="day")
   {
     if (input$variable=="evapotranspiration" | input$variable=="sensible_heat_flux_in_air" | input$variable=="latent_heat_flux_in_air") {
       data <- merge(observation, simulation)
@@ -136,8 +130,14 @@ renderDygraph({
       dyRangeSelector() %>%
       dyRoller()
   } else {
-    data <- merge(observation, simulation)
-    
+    if (input$aggregation=="hour") 
+    {
+      index(observation) <- as.POSIXct(index(observation))
+      data <- merge(observation, simulation)
+    } else {
+       data <- merge(observation, simulation)
+    }
+   
     dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
       dyRangeSelector() %>%
       dyRoller()

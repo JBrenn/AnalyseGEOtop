@@ -108,7 +108,7 @@ GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save
     soil_head <- diff(c(0,cumsum(soil_thickness)))/2 + c(0,cumsum(soil_thickness))[-length(soil_thickness)-1]
     
     soil_file <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
-    soil_time <- as.POSIXct(strptime(x = as.character(soil_file[,1]), format = "%d/%m/%Y %H:%M", tz = "Etc/GMT+1"))
+    soil_time <- as.POSIXlt(strptime(x = as.character(soil_file[,1]), format = "%d/%m/%Y %H:%M", tz = "Etc/GMT+1"))
     soil_header <- names(soil_file)[-c(1:6)]
   }
   
@@ -153,6 +153,7 @@ GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save
     
     soil_data <- zoo(soil_file[,soil_header[choice]], soil_time)
     for (i in 1:length(depth_mm)) var_out[[paste("soil_temperature_", depth_mm[i], sep="")]] <- soil_data[,i]
+    
   }
   
   if(save_rData) save("var_out", file = file.path(wpath,"PointOutValidation.RData"))
