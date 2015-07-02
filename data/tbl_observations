@@ -25,3 +25,4 @@ obs_var,geotop_where,geotop_what,unit,explain
 "soil_temperature","SoilAveragedTempProfileFile","","degC","Soil temperature is the bulk temperature of the soil, not the surface (skin) temperature."
 "liquid_soil_water_pressure","SoilLiqWaterPressProfileFile","","hPa",""
 "total_soil_water_pressure","SoilTotWaterPressProfileFile","","hPa",""
+"soil_heat_flux","PointOutputFile","Soil_heat_flux.W.m2.","W/m2"
