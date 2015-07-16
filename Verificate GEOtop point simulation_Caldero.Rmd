@@ -44,7 +44,7 @@ data("observations_Caldero")
 
 data("lookup_tbl_observation")
 
-varout <- sim0001_Caldero
+varout <- var_out
 
 time(Caldero_30min)$mday <- time(Caldero_30min)$mday - 1
 time(Caldero_d) <- time(Caldero_d) - 1

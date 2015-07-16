@@ -13,11 +13,11 @@ Imports:
     geotopbricks,
     chron,
     zoo,
-    hydroTSM,
     hydroGOF,
     soilwater,
     raster,
     sp,
     ggplot2,
     xts,
-    RSAGA
+    RSAGA,
+    stringr
