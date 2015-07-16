@@ -37,7 +37,8 @@ if(!require(hydroGOF))
   require(hydroGOF)
 }
 
-data("PointOutValidation_sim0001_Caldero")
+#data("PointOutValidation_sim0001_Caldero")
+data("PointOutValidation_sim0000_Caldero")
 
 #wpath <- wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim001"
 
@@ -52,7 +53,8 @@ time(Caldero_d) <- time(Caldero_d) - 1
 obs <- list(hour=Caldero_30min, day=Caldero_d)
 
 #Caldero_sim0001 <- GEOtop_ReadValidationData(wpath = wpath, observations = obs, soil_files = T, save_rData = T)
-varout <- Caldero_sim0001
+#varout <- Caldero_sim0001
+varout <- Caldero_sim000
 
 ```
 
