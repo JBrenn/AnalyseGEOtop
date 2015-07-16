@@ -37,14 +37,14 @@ if(!require(hydroGOF))
   require(hydroGOF)
 }
 
-data("PointOutValidation")
+data("PointOutValidation_sim0001_Caldero")
 
 data("observations_Caldero")
-data("observations_B2")
+#data("observations_B2")
 
 data("lookup_tbl_observation")
 
-var_out <- sim0001_Caldero
+varout <- sim0001_Caldero
 
 time(Caldero_30min)$mday <- time(Caldero_30min)$mday - 1
 time(Caldero_d) <- time(Caldero_d) - 1
@@ -95,7 +95,7 @@ renderDygraph({
     observation <- obs[[input$aggregation]][,input$variable]
   } else observation <- obs[["day"]][,input$variable]
   
-  simulation <- var_out[[input$variable]]
+  simulation <- varout[[input$variable]]
   
   if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
   if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
@@ -156,7 +156,7 @@ renderDataTable({
     observation <- obs[[input$aggregation]][,input$variable]
   } else observation <- obs[["day"]][,input$variable]
   
-  simulation <- var_out[[input$variable]]
+  simulation <- varout[[input$variable]]
   
  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
   if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
@@ -180,14 +180,14 @@ renderDataTable({
   
   mon <- as.numeric(format(time(data), "%m"))
   
-  data_djf <-  data[mon==12 | mon==1 | mon==2,]
-  gofs$DJF <-  c(gof(sim = data_djf$simulation, obs=data_djf$observation, na.rm = T))
-  data_mam <-  data[mon==3 | mon==4 | mon==5,]
-  gofs$MAM <-  c(gof(sim = data_mam$simulation, obs=data_mam$observation, na.rm = T))
-  data_jja <-  data[mon==6 | mon==7 | mon==8,]
-  gofs$JJA <-  c(gof(sim = data_jja$simulation, obs=data_jja$observation, na.rm = T))
-  data_son <-  data[mon==9 | mon==10 | mon==11,]
-  gofs$SON <-  c(gof(sim = data_son$simulation, obs=data_son$observation, na.rm = T))
+  datadjf <-  data[mon==12 | mon==1 | mon==2,]
+  gofs$DJF <-  c(gof(sim = datadjf$simulation, obs=datadjf$observation, na.rm = T))
+  datamam <-  data[mon==3 | mon==4 | mon==5,]
+  gofs$MAM <-  c(gof(sim = datamam$simulation, obs=datamam$observation, na.rm = T))
+  datajja <-  data[mon==6 | mon==7 | mon==8,]
+  gofs$JJA <-  c(gof(sim = datajja$simulation, obs=datajja$observation, na.rm = T))
+  datason <-  data[mon==9 | mon==10 | mon==11,]
+  gofs$SON <-  c(gof(sim = datason$simulation, obs=datason$observation, na.rm = T))
   
   gofs <- gofs[,c(2,3,4,5,6,1)]
 
