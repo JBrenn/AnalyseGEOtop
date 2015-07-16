@@ -4,7 +4,7 @@
 # data("observations_B2")
 # obs   <- list(hour=B2_h, day=B2_d)
 
-GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save_rData=TRUE, simname)
+GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save_rData=TRUE)
 {
   # source lookup_tbl
   data(lookup_tbl_observation)
@@ -156,8 +156,6 @@ GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save
     
   }
   
-  assign(x = simname, value = var_out)
-  
-  if(save_rData) save(simname, file = file.path(wpath,"PointOutValidation.RData"))
+  if(save_rData) save(list = "var_out", file = file.path(wpath,"PointOutValidation.RData"))
   return(var_out)
 }
