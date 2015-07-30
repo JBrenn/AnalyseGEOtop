@@ -224,5 +224,5 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
   
   if (pdf | png) dev.off()
   
-  return(NULL)
+  return()
 }
