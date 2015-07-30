@@ -10,7 +10,7 @@ Visulisation of the Soil Water Retention Curve and hydraulic conductivity for mo
 \usage{
 GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, 
                         observed=NULL, add_ref_curves=TRUE, pdf=FALSE, png=TRUE, 
-                        accurate=10, ksat, plot_khy=TRUE)
+                        accurate=10, ksat, colors=NULL, plot_khy=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -42,7 +42,7 @@ GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc,
   boolean, default = FALSE: visualisation is saved in pdf if TRUE
 }
   \item{png}{
-  boolean, default = TRUE: visualisation is saved in png if TRUE
+  boolean, default = TRUE: visualisation is saved in png if TRUE; if png=FALSE and pdf=FALSE vis is ploted in x11()
 }
   \item{accurate}{
   default = 10: water potential is given as \emph{seq(1,10^7,10)}, for accurate plotting set argument 1

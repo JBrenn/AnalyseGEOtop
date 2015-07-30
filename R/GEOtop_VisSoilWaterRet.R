@@ -45,9 +45,11 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
     khy[[i]] <- khy(psi = -psi, v = 0.5, ksat = ksat[i], alpha = alpha[i], n = n[i], theta_sat = theta_sat[i], theta_res = theta_res[i])
   }
   
-  if (pdf) pdf("./SoilWaterRetentionCurve.pdf", width = 14, height = 10)
-  if (png) png("./SoilWaterRetentionCurve.png", width = 1000, height = 800)
-  
+  if (pdf | png) {
+    if (pdf) pdf("./SoilWaterRetentionCurve.pdf", width = 14, height = 10)
+    if (png) png("./SoilWaterRetentionCurve.png", width = 1000, height = 800)
+  }
+
     op <- par(las=1, pty="s", mar=c(5,4,4,5)+.1)
     # swc vs. log(psi) = pF
   if (!is.null(observed))
@@ -101,6 +103,8 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
         plot(psi, khy[[1]], type="l", xlab="", ylab="", log="x", xaxt="n", yaxt="n", bty="n",
              main="", col=colors_khy[1], lwd=2,
              xlim=c(1,10000000) )
+        
+        axis(4, col="grey", col.ticks = "grey", col.axis="grey")
       }
 
     } else {
