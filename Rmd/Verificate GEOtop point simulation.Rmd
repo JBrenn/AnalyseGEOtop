@@ -50,7 +50,7 @@ obs <- observation
 if (file.exists(file.path(wpath,"PointOutValidation.RData"))) {
   load(file.path(wpath,"PointOutValidation.RData"))
 } else {
-  var_out <- GEOtop_ReadValidationData(wpath = wpath, observations = observation, save_rData = T)
+  var_out <- GEOtop_ReadValidationData(wpath = wpath, obs = observation, save_rData = T)
 }
 
 varout <- var_out
@@ -70,7 +70,7 @@ data("lookup_tbl_observation")
 inputPanel(
   #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
   
-  selectInput(inputId = "variable", label = "discover variable", choices = names(Caldero_d), selected = "air_temperature"),
+  selectInput(inputId = "variable", label = "discover variable", choices = dimnames(obs$day)[[2]], selected = "air_temperature"),
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   

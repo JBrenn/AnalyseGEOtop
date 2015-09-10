@@ -137,7 +137,7 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     choice <- sapply(depth_mm, function(x) which.min(abs(soil_head-x)))
     
     soil_data <- zoo(soil_file[,soil_header[choice]], soil_time)
-    for (i in 1:length(depth_mm)) var_out[[paste("liquid_soil_water_pressure_", depth_mm[i], sep="")]] <- soil_data[,i]
+    for (i in 1:length(depth_mm)) var_out[[paste("liquid_soil_water_pressure_", depth_mm[i], sep="")]] <- soil_data[,i] / (-10)
   }
   
 # soil temperature  
