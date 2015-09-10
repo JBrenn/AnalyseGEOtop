@@ -26,3 +26,4 @@ obs_var,geotop_where,geotop_what,unit,explain
 "liquid_soil_water_pressure","SoilLiqWaterPressProfileFile","","hPa",""
 "total_soil_water_pressure","SoilTotWaterPressProfileFile","","hPa",""
 "soil_heat_flux","PointOutputFile","Soil_heat_flux.W.m2.","W/m2"
+"energy_flux_budget","PointOutputFile","Surface_Energy_balance.W.m2.","W/m2"

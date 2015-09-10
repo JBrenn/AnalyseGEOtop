@@ -4,7 +4,7 @@
 # data("observations_B2")
 # obs   <- list(hour=B2_h, day=B2_d)
 
-GEOtop_ReadValidationData <- function(wpath, observations, soil_files=TRUE, save_rData=TRUE)
+GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TRUE)
 {
   # source lookup_tbl
   data(lookup_tbl_observation)

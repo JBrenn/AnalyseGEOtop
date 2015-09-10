@@ -6,14 +6,14 @@ Read point output from GEOtop for verification of the model results}
 \description{
 Read point output from GEOtop for verification of the model results}
 \usage{
-GEOtop_ReadValidationData(wpath, observations, soil_files=TRUE)
+GEOtop_ReadValidationData(wpath, obs, soil_files=TRUE, save_rData=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{wpath}{
 path into simulation folder
 }
-  \item{observation}{
+  \item{obs}{
 zoo object, data frame, with specific names of variables used for validate the model results; name conventions according to CF Standard Name Table \url{http://cfconventions.org}.
 }
  \item{soil_files}{
