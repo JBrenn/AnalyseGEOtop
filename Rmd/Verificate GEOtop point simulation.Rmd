@@ -38,8 +38,8 @@ if(!require(hydroGOF))
 }
 
 
-wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
-# wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
+#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
+wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
 
 # obs data
 load(file.path(wpath, "obs", "observation.RData"))
@@ -72,11 +72,13 @@ inputPanel(
   
   selectInput(inputId = "variable", label = "discover variable", choices = dimnames(obs$day)[[2]], selected = "air_temperature"),
   
+  selectInput(inputId = "add_variable", label = "additional variable", choices = dimnames(obs$day)[[2]], selected = "rainfall_amount"),
+  
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
-  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE),
+  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE)
   
-  radioButtons(inputId = "cum", label = "cumulated or time series", choices = c("time series","cumulated over time"), selected = "time series", inline = FALSE)
+  # radioButtons(inputId = "cum", label = "cumulated or time series", choices = c("time series","cumulated over time"), selected = "time series", inline = FALSE)
   
 )
 
@@ -96,8 +98,14 @@ renderDygraph({
   if (grepl("soil_moisture_content",input$variable)) name <- "soil_moisture_content"
   if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
   if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
+  
+  add_name <- input$add_variable
+  if (grepl("soil_moisture_content",input$add_variable)) add_name <- "soil_moisture_content"
+  if (grepl("soil_temperature", input$add_variable)) add_name <- "soil_temperature"
+  if (grepl("liquid_soil_water_pressure", input$add_variable)) add_name <- "liquid_soil_water_pressure"
    
   units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
+  add_units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==add_name]
   
   if (input$aggregation=="hour" | input$aggregation=="day")
   {
@@ -105,6 +113,7 @@ renderDygraph({
   } else observation <- obs[["day"]][,input$variable]
   
   simulation <- varout[[input$variable]]
+  add_var    <- varout[[input$add_variable]] * (-1)
   
   if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
   if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
@@ -119,33 +128,39 @@ renderDygraph({
     observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
   } 
   
+  if (input$aggregation=="day")  add_var <- aggregate(add_var, as.Date(time(add_var)), sum, na.rm=T) 
+  if (input$aggregation=="month")  add_var <- aggregate(add_var, as.yearmon(time(add_var)), sum, na.rm=T) 
+  
  # data <- merge(observation, simulation)
   
-  if (input$cum == "cumulated over time" & input$aggregation=="day")
-  {
-    if (input$variable=="evapotranspiration" | input$variable=="sensible_heat_flux_in_air" | input$variable=="latent_heat_flux_in_air") {
-      data <- merge(observation, simulation)
-      data <- window(x = data, start = as.Date("30-04-2011",format="%d-%m-%Y"), end = as.Date("17-04-2013", format="%d-%m-%Y"))
-      data <- zoo(na.approx.default(data), time(data))
-      data <- cumsum(data) 
-    } else {
-      data <- merge(observation, simulation)
-      data <- data[!is.na(data$observation),]
-      data <- cumsum(data)
-    }
-
+#   if (input$cum == "cumulated over time" & input$aggregation=="day")
+#   {
+#     if (input$variable=="evapotranspiration" | input$variable=="sensible_heat_flux_in_air" | input$variable=="latent_heat_flux_in_air") {
+#       data <- merge(observation, simulation)
+#       data <- window(x = data, start = as.Date("30-04-2011",format="%d-%m-%Y"), end = as.Date("17-04-2013", format="%d-%m-%Y"))
+#       data <- zoo(na.approx.default(data), time(data))
+#       data <- cumsum(data) 
+#     } else {
+#       data <- merge(observation, simulation)
+#       data <- data[!is.na(data$observation),]
+#       data <- cumsum(data)
+#     }
+# 
+#     
+#     dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
+#       dyRangeSelector() %>%
+#       dyRoller()
+#   } else {
+    
+    data <- merge(add_var, observation, simulation)
+    names(data) <- c( "additional var", "observation", "simulation")
     
     dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
       dyRangeSelector() %>%
-      dyRoller()
-  } else {
+      dyRoller() %>%
+      dySeries(name = "additional var", axis = "y2", stepPlot = TRUE, fillGraph = TRUE, label = paste("[-",add_units,"]",sep=""))
     
-    data <- merge(observation, simulation)
-    
-    dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
-      dyRangeSelector() %>%
-      dyRoller()
-  }
+#  }
  
 })
 
