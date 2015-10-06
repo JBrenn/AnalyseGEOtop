@@ -87,8 +87,8 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
 # error = Rn - G - LE - H
   if ("postprocess_EB" %in% varPointIn$geotop_what)
   {
-    EB <- var_out[,"net_radiation"] - var_out[,"latent_heat_flux_in_air"] - var_out[,"sensible_heat_flux_in_air"] - 
-          var_out[,"soil_heat_flux"]
+    EB <- var_out[["net_radiation"]] - var_out[["latent_heat_flux_in_air"]] - var_out[["sensible_heat_flux_in_air"]] - 
+          var_out[["soil_heat_flux"]]
     
     name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_EB"])
     var_out[[name]] <- EB
