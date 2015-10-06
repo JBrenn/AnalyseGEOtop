@@ -43,6 +43,13 @@ if(!require(ggplot2))
   require(ggplot2)
 }
 
+
+if(!require(rCharts))
+{
+  install.packages("rCharts")
+  require(rCharts)
+}
+
 wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
 #wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
 
@@ -266,9 +273,11 @@ renderPlot({
     ggplot(data = data, aes(x=observation, y=simulation)) +
       geom_point() +
       geom_abline(intercept=0, slope=1, col=rgb(1,0,0,.5), lwd=2)
-      
+
 #      ylim(min(data), max(data)) + 
 #      xlim(min(data), max(data))
-   
+    
+#     scatter.rcharts <- rPlot(simulation ~ observation, data = data, type = 'point')
+#     scatter.rcharts$show('iframesrc', cdn=TRUE)
 })     
 ```
