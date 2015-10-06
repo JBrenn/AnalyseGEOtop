@@ -130,7 +130,7 @@ GEOtop_animateMAPS <- function(wpath, mapkey, layers, soil_files,
       file.remove("Rplots.pdf")
       
       # for linux system
-      print("image precessing with ImageMagick")
+      print("image processing with ImageMagick")
       if (is.null(delay_value)) {
         system(paste("convert -loop 1 *.pdf ", file.path(wpath, paste("gif/", variable,"_L",i,".gif",sep=""))) )
       } else {

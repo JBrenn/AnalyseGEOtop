@@ -37,9 +37,14 @@ if(!require(hydroGOF))
   require(hydroGOF)
 }
 
+if(!require(ggplot2))
+{
+  install.packages("ggplot2")
+  require(ggplot2)
+}
 
-#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
-wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
+wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
+#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
 
 # obs data
 load(file.path(wpath, "obs", "observation.RData"))
@@ -220,3 +225,50 @@ renderDataTable({
 ```
 
 ***
+
+####Scatterplot
+
+```{r, echo=FALSE}
+
+renderPlot({
+  
+    name <- input$variable
+    if (grepl("soil_moisture_content",input$variable)) name <- "soil_moisture_content"
+    if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
+    if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
+    
+    units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
+    
+    if (input$aggregation=="hour" | input$aggregation=="day")
+    {
+      observation <- obs[[input$aggregation]][,input$variable]
+    } else observation <- obs[["day"]][,input$variable]
+    
+    simulation <- varout[[input$variable]]
+
+    if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
+    if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
+    if (input$aggregation=="month" & input$flux_amount=="flux") 
+    {
+      simulation <- aggregate(simulation, as.yearmon(time(simulation)), mean, na.rm=T)
+      observation <- aggregate(observation, as.yearmon(time(observation)), mean, na.rm=T)
+    } 
+    if (input$aggregation=="month" & input$flux_amount=="amount") 
+    {
+      simulation <- aggregate(simulation, as.yearmon(time(simulation)), sum, na.rm=F)
+      observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
+    } 
+
+    data <- merge(observation, simulation)
+    names(data) <- c("observation", "simulation")
+    data <- as.data.frame(coredata(data))
+    
+    ggplot(data = data, aes(x=observation, y=simulation)) +
+      geom_point() +
+      geom_abline(intercept=0, slope=1, col=rgb(1,0,0,.5), lwd=2)
+      
+#      ylim(min(data), max(data)) + 
+#      xlim(min(data), max(data))
+   
+})     
+```
