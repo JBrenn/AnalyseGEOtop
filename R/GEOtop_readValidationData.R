@@ -72,6 +72,7 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_LE"])
     var_out[[name]] <- LE[[1]]
   }
+  
   if ("postprocess_H" %in% varPointIn$geotop_what)
   {
     H <- point_data[,c("Hg_veg.W.m2.", "Hg_unveg.W.m2.", "Hv.W.m2.", "Canopy_fraction..." )]
