@@ -39,7 +39,7 @@ if(!require(hydroGOF))
 
 if(!require(ggplot2))
 {
-  install.packages("ggplot2")
+  install.packages(ggplot2)
   require(ggplot2)
 }
 
@@ -77,7 +77,7 @@ inputPanel(
   
   selectInput(inputId = "variable", label = "discover variable", choices = dimnames(obs$day)[[2]], selected = "air_temperature"),
   
-  selectInput(inputId = "add_variable", label = "additional variable", choices = dimnames(obs$day)[[2]], selected = "rainfall_amount"),
+  selectInput(inputId = "add_variable", label = "additional variable (sim)", choices = dimnames(obs$day)[[2]], selected = "rainfall_amount"),
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
