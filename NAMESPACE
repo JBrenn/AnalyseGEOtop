@@ -12,6 +12,7 @@ import(ggplot2)
 import(xts)
 import(RSAGA)
 import(stringr)
+import(data.table)
 
 # Export all names
 exportPattern(".")

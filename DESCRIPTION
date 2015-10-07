@@ -20,4 +20,5 @@ Imports:
     ggplot2,
     xts,
     RSAGA,
-    stringr
+    stringr,
+    data.table

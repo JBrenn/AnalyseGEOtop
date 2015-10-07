@@ -106,7 +106,7 @@ renderDygraph({
     dygraph(data) %>%
       dyRangeSelector() %>%
       dyRoller() %>%
-      dySeries(name = names(data)[5], axis = "y2", stepPlot = TRUE, fillGraph = TRUE)
+      dySeries(name = input$variable5, axis = "y2", stepPlot = TRUE, fillGraph = TRUE)
  
 })
 
