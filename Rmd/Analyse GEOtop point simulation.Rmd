@@ -1,0 +1,116 @@
+---
+title: "Analyse GEOtop point simulation"
+author: "Johannes Brenner"
+date: "25. Juni 2015"
+output: html_document
+runtime: shiny
+---
+
+***
+
+This R Markdown document is made interactive using Shiny. To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+***
+
+```{r, include=FALSE}
+
+if(!require(AnalyseGeotop))
+{
+  if(!require(devtools))
+  {
+    install.packages(devtools)
+    require(devtools)
+  }
+  install_github("AnalyseGeotop", "JBrenn")
+  require(AnalyseGeotop)
+}
+
+if(!require(dygraphs))
+{
+  install.packages(dygraphs)
+  require(dygraphs)
+}
+
+# if(!require(hydroGOF))
+# {
+#   install.packages(hydroGOF)
+#   require(hydroGOF)
+# }
+# 
+# if(!require(ggplot2))
+# {
+#   install.packages(ggplot2)
+#   require(ggplot2)
+# }
+
+#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
+wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
+
+# sim data
+if (file.exists(file.path(wpath,"PointOut.RData"))) {
+  load(file.path(wpath,"PointOut.RData"))
+} else {
+  out <- GEOtop_ReadPointData(wpath = wpath, save_rData = T)
+}
+
+  
+```
+
+#### Interactive Inputs
+
+```{r, echo=FALSE}
+inputPanel(
+  #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
+  
+  selectInput(inputId = "variable1", label = "variable #1", choices = names(out), selected = "Tair.C."),
+  
+  selectInput(inputId = "variable2", label = "variable #2", choices = c("n.a.",names(out)), selected = "Tsurface.C."),
+  
+  selectInput(inputId = "variable3", label = "variable #3", choices = c("n.a.",names(out)), selected = "Tvegetation.C."),
+  
+  selectInput(inputId = "variable4", label = "variable #4", choices = c("n.a.",names(out)), selected = "Tcanopyair.C."),
+  
+  selectInput(inputId = "variable5", label = "variable #5", choices = c("n.a.",names(out)), selected = "PrainPsnow_over_canopy.mm."),
+  
+  radioButtons(inputId = "fromabove", label = "variable #5", choices = c("normal","from above"), selected = "from above", inline = FALSE),
+  
+  radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE)
+  
+
+  
+#  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE)
+  
+  # radioButtons(inputId = "cum", label = "cumulated or time series", choices = c("time series","cumulated over time"), selected = "time series", inline = FALSE)
+  
+)
+
+```
+
+***
+
+#### Time Series Plot
+
+
+
+```{r, echo=FALSE}
+
+renderDygraph({
+  
+  forplot <- c(input$variable1, input$variable2, input$variable3, input$variable4, input$variable5)
+  forplot <- forplot[forplot != "n.a."]
+    
+    data <- out[,forplot] 
+    
+    if (input$fromabove == "from above") data[,input$variable5] <- data[,input$variable5] * (-1)
+    
+    dygraph(data) %>%
+      dyRangeSelector() %>%
+      dyRoller() %>%
+      dySeries(name = names(data)[5], axis = "y2", stepPlot = TRUE, fillGraph = TRUE)
+ 
+})
+
+```
+  
+***
+
