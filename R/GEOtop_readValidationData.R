@@ -100,6 +100,15 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     var_out[[name]] <- H[[1]]
   }
   
+# postprocess Radiation components
+  if ("postprocess_Rn" %in% varPointIn$geotop_what)
+  {
+    Rn <- var_out[["net_downward_shortwave_flux"]] + var_out[["net_downward_longwave_flux"]]
+    
+    name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_Rn"])
+    var_out[[name]] <- Rn
+  }  
+  
 # postprocess Energy Budget
 # error = Rn - G - LE - H
   if ("postprocess_EB" %in% varPointIn$geotop_what)
@@ -111,14 +120,7 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     var_out[[name]] <- EB
   }
   
-# postprocess Radiation components
-  if ("postprocess_Rn" %in% varPointIn$geotop_what)
-  {
-    Rn <- var_out[["net_downward_shortwave_flux"]] + var_out[["net_downward_longwave_flux"]]
-    
-    name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_Rn"])
-    var_out[[name]] <- Rn
-  }
+
    
 # get soil information
   if (length(sapply(df_names, grep, pattern="soil_moisture_content", value=T)) > 1 |
