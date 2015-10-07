@@ -13,6 +13,7 @@ import(xts)
 import(RSAGA)
 import(stringr)
 import(data.table)
+import(dplyr)
 
 # Export all names
 exportPattern(".")

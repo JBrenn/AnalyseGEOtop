@@ -21,4 +21,5 @@ Imports:
     xts,
     RSAGA,
     stringr,
-    data.table
+    data.table,
+    dplyr
