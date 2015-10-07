@@ -53,9 +53,9 @@ GEOtop_ReadPointData <- function(wpath,
   # partitioning: 1 means full rain - 0 means full snow  
     mutate(Precipitation_part_over_canopy = Prain_over_canopy.mm. / PrainPsnow_over_canopy.mm.) %>%
   # net shortwave energy flux  
-    mutate(Net_shortwave_flux_W.m2. = SWin.W.m2. - SWout.W.m2.) %>%
+    mutate(Net_shortwave_flux_W.m2. = SWin.W.m2. - SWup.W.m2.) %>%
   # net shortwave energy flux  
-    mutate(Net_longwave_flux_W.m2. = LWin.W.m2. - LWout.W.m2.) %>% 
+    mutate(Net_longwave_flux_W.m2. = LWin.W.m2. - LWup.W.m2.) %>% 
   # net radiation 
     mutate(Net_radiation_W.m2. = Net_shortwave_flux_W.m2. + Net_longwave_flux_W.m2.) %>%
   # latent heat flux in air
