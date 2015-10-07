@@ -18,7 +18,7 @@ obs_var,geotop_where,geotop_what,unit,explain
 "sensible_heat_flux_in_air","n.a.","postprocess_H","W/m2",""
 "water_evaporation_amount","PointOutputFile","Evap_surface.mm.","mm","Amount means mass per unit area. Water means water in all phases. Evaporation is the conversion of liquid or solid into vapor. (The conversion of solid alone into vapor is called sublimation.)"
 "transpiration_amount","PointOutputFile","Trasp_canopy.mm.","mm","Amount means mass per unit area."
-"evapotranspiration_amount","PointOutputFile","Evap_surface.mm.%Trasp_canopy.mm.","mm",""
+"evapotranspiration_amount","PointOutputFile","Evap_surface.mm.%Trasp_canopy.mm.%plus","mm",""
 "liquid_soil_moisture_content","SoilLiqWaterPressProfileFile","","-",""
 "solid_soil_moisture_content","SoilIceWaterPressProfileFile","","-",""
 "soil_moisture_content","SoilLiqWaterPressProfileFile%SoilIceWaterPressProfileFile","","-",""
