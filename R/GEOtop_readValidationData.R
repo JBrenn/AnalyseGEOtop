@@ -50,7 +50,8 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
                                                  date_field="Date12.DDMMYYYYhhmm.",
                                                  tz="Etc/GMT+1")
   
-  point_data[,"LWnet.W.m2."] <- point_data[,"LWnet.W.m2."] * (-1)
+#LWnet.W.m2. and SWnet.W.m2. is below the canopy, see also LE and H 
+  
   
 # get variables direct or sums from point data
   var_out <- list()
@@ -63,9 +64,16 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     if (length(i_split[[1]])==1) {
       var_out[[name]] <- point_data[,var]
     } else {
-      var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
-      var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
-      var_out[[name]] <- point_data[ ,i_split[[1]][1] ] + point_data[ ,i_split[[1]][2] ]
+      if (i_split[[1]][3]=="plus") {
+        var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
+        var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
+        var_out[[name]] <- point_data[ ,i_split[[1]][1] ] + point_data[ ,i_split[[1]][2] ]
+      } else {
+        var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
+        var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
+        var_out[[name]] <- point_data[ ,i_split[[1]][1] ] - point_data[ ,i_split[[1]][2] ]
+      }
+   
     }
   }
 
@@ -101,6 +109,15 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     
     name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_EB"])
     var_out[[name]] <- EB
+  }
+  
+# postprocess Radiation components
+  if ("postprocess_Rn" %in% varPointIn$geotop_what)
+  {
+    Rn <- var_out[["net_downward_shortwave_flux"]] + var_out[["net_downward_longwave_flux"]]
+    
+    name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_Rn"])
+    var_out[[name]] <- Rn
   }
    
 # get soil information
