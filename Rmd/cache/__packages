@@ -1,0 +1,17 @@
+base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
+editR
+tools
+shiny
+shinyAce
+shinyFiles
+shinyBS
+knitr
+rmarkdown
+AnalyseGeotop
+dygraphs
