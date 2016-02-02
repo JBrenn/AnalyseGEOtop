@@ -20,8 +20,9 @@
 # theta_fc <- soil_input$vwc_fc[1]
 # ksat <- soil_input$Kh[1]
 
-GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, observed=NULL, add_ref_curves=TRUE, pdf=FALSE, png=TRUE,
-                                   accurate=10, ksat, colors=NULL, plot_khy=TRUE) 
+GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc, observed=NULL, add_ref_curves=TRUE, 
+                                   pdf=FALSE, png=TRUE,
+                                   accurate=10, ksat, colors=NULL, plot_khy=TRUE, do.legend=TRUE) 
 {
   # colors
   if (is.null(colors)) {
@@ -35,7 +36,7 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
   # soil water pressure head in centimeter
   psi <- seq(1,10000000,accurate)
    
-  # volumetric soil water content in vol%ydraulic conducti
+  # volumetric soil water content in vol%
   # hydraulic conductivity in mm/s
   swc <- list()
   khy <- list()
@@ -63,7 +64,7 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
     
     for (i in 1:length(alpha))
     {
-      plot(psi, swc [[i]], type="l", xlab="pF", ylab="", log="x", xaxt="n", lwd=2, col = colors_swc[i], bty="n",
+      plot(psi, swc[[i]], type="l", xlab="pF", ylab="", log="x", xaxt="n", lwd=2, col = colors_swc[i], bty="n",
            ylim=c(0,60), xlim=c(1,10000000) )
     }
     
@@ -82,7 +83,7 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
       axis(4, col="grey", col.ticks = "grey", col.axis="grey")
       
       legend("topright",legend = c("Soil Water Content  [volume %]","Hydraulic Conductivity [mm/s]"),col=c("black","grey"),
-             lwd=3,bty="n", text.col = c("black","grey"))
+              lwd=3,bty="n", text.col = c("black","grey"))
     } else {
       title(ylab = "Soil Water Content  [volume %]")
     }
@@ -218,7 +219,8 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
     
     if (!is.null(names(alpha))) leg.names <- paste(names(alpha),": a=", alpha, ", n=", n, ", Ksat=", ksat, sep="") else leg.names <- paste("alpha=", alpha, ", n=", n, ", Ksat=", ksat, sep="") 
     
-    legend("topright", inset = .05, legend = leg.names, lwd=2, col=colors_swc, bty="n")
+    if (do.legend)
+      legend("topright", inset = .05, legend = leg.names, lwd=2, col=colors_swc, bty="n")
 
     par(op)
   
