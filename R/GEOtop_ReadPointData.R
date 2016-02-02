@@ -1,7 +1,7 @@
 # Function to load GEOtop point simulation output based on observations
 
 #  wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
- wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
+#  wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
 #  data("observations_B2")
 #  
 #  load(file.path(wpath, "obs", "observation.RData"))
@@ -45,25 +45,28 @@ GEOtop_ReadPointData <- function(wpath,
   out <- 
   dt %>%
   # Evapotranspiration  
-    mutate(Evapotranspiration.mm. = Evap_surface.mm. + Trasp_canopy.mm.) %>%
+    dplyr::mutate(Evapotranspiration.mm. = Evap_surface.mm. + Trasp_canopy.mm.) %>%
   # partitioning: 1 means full evaporation - 0 means full transpiration  
-    mutate(Evapotranspiration_Partitioning = Evap_surface.mm. / Evapotranspiration.mm.) %>%
+    dplyr::mutate(Evapotranspiration_Partitioning = Evap_surface.mm. / Evapotranspiration.mm.) %>%
   # precipitation
-    mutate(PrainPsnow_over_canopy.mm. = Psnow_over_canopy.mm. + Prain_over_canopy.mm.)  %>%
+    dplyr::mutate(PrainPsnow_over_canopy.mm. = Psnow_over_canopy.mm. + Prain_over_canopy.mm.)  %>%
   # partitioning: 1 means full rain - 0 means full snow  
-    mutate(Precipitation_part_over_canopy = Prain_over_canopy.mm. / PrainPsnow_over_canopy.mm.) %>%
+    dplyr::mutate(Precipitation_part_over_canopy = Prain_over_canopy.mm. / PrainPsnow_over_canopy.mm.) %>%
   # net shortwave energy flux  
-    mutate(Net_shortwave_flux_W.m2. = SWin.W.m2. - SWup.W.m2.) %>%
+    dplyr::mutate(Net_shortwave_flux_W.m2. = SWin.W.m2. - SWup.W.m2.) %>%
   # net shortwave energy flux  
-    mutate(Net_longwave_flux_W.m2. = LWin.W.m2. - LWup.W.m2.) %>% 
+    dplyr::mutate(Net_longwave_flux_W.m2. = LWin.W.m2. - LWup.W.m2.) %>% 
   # net radiation 
-    mutate(Net_radiation_W.m2. = Net_shortwave_flux_W.m2. + Net_longwave_flux_W.m2.) %>%
+    dplyr::mutate(Net_radiation_W.m2. = Net_shortwave_flux_W.m2. + Net_longwave_flux_W.m2.) %>%
   # latent heat flux in air
-    mutate(Latent_heat_flux_over_canopy_W.m2. = Canopy_fraction... * (LEg_veg.W.m2. + LEv.W.m2.) + (1-Canopy_fraction...) * LEg_unveg.W.m2.) %>%
+    dplyr::mutate(Latent_heat_flux_over_canopy_W.m2. = Canopy_fraction... * (LEg_veg.W.m2. + LEv.W.m2.) + (1-Canopy_fraction...) * LEg_unveg.W.m2.) %>%
   # sensible heat flux in air
-    mutate(Sensible_heat_flux_over_canopy_W.m2. = Canopy_fraction... * (Hg_veg.W.m2. + Hv.W.m2.) + (1-Canopy_fraction...) * Hg_unveg.W.m2.) %>%
+    dplyr::mutate(Sensible_heat_flux_over_canopy_W.m2. = Canopy_fraction... * (Hg_veg.W.m2. + Hv.W.m2.) + (1-Canopy_fraction...) * Hg_unveg.W.m2.) %>%
   # energy budget
-    mutate(Energy_budget_storage_W.m2. = Net_radiation_W.m2. - Latent_heat_flux_over_canopy_W.m2. - Sensible_heat_flux_over_canopy_W.m2. - Soil_heat_flux.W.m2.) 
+    dplyr::mutate(Energy_budget_storage_W.m2. = Net_radiation_W.m2. - Latent_heat_flux_over_canopy_W.m2. - Sensible_heat_flux_over_canopy_W.m2. - Soil_heat_flux.W.m2.) 
+  
+# get available keywords
+  keywords <- declared.geotop.inpts.keywords(wpath = wpath)$Keyword
   
 # get soil information
     if (soil_files) {
@@ -87,13 +90,16 @@ GEOtop_ReadPointData <- function(wpath,
     
 # soil moisture content liquid, soil moisture content ice, ...
     for (i in soil_output_files) {
-      soil_file <- get.geotop.inpts.keyword.value(keyword=i, wpath=wpath, data.frame=TRUE)
-      soil_header <- paste(substr(i,1,14), soil_head, sep="")
-      names(soil_file)[7:length(soil_file)] <- soil_header
-      
-      out <- 
-        out %>% 
-        left_join(as.data.table(soil_file[,-1]))
+      if (i %in% keywords)
+      {
+        soil_file <- get.geotop.inpts.keyword.value(keyword=i, wpath=wpath, data.frame=TRUE)
+        soil_header <- paste(substr(i,1,14), soil_head, sep="")
+        names(soil_file)[7:length(soil_file)] <- soil_header
+        
+        out <- 
+          out %>% 
+          dplyr::left_join(as.data.table(soil_file[,-1]))
+      }
     }
 
 # add liquid and ice water content
