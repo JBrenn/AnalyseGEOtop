@@ -3,7 +3,7 @@
 
 # data from point.RData (GEOtop_ReadMultiPoint)
 
-# wpath="/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_003"
+# wpath="/run/user/1000/gvfs/smb-shnare:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_003"
 # 
 # wpath="/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_P2_002/"
 # 
@@ -192,15 +192,15 @@ GEOtop_VisSoilWaterRet <- function(alpha, n, theta_sat, theta_res, theta_pwp, th
     #text(x = c(10^2.15,10^4.2), y=61, labels = c("FC","PWP"), col="grey30")
     text(x = c(10^1.8,10^2.5,10^4.2), y=-1, labels = c("1.8","2.5","4.2"), col="grey30")
 
-    if (length(alpha)==1) 
-    {
-      abline(h=c(theta_fc,theta_pwp,theta_res,theta_sat)*100, 
-             col=c(rgb(1,0,0,.5),rgb(1,0,0,.75),grey.colors(n = 1, .8, .8, .5),grey.colors(n = 1, .8, .8, .5)), lty="dashed")
-      
-      # text model soil parameter
-      text(x=max(psi), y=c(theta_fc,theta_pwp,theta_res,theta_sat)*100, labels = c("fc","pwp","res","sat"), 
-           col=c(rgb(1,0,0,.75),rgb(1,0,0,.75),"grey30","grey30"))
-    }
+    # if (length(alpha)==1)
+    # {
+    #   abline(h=c(theta_fc,theta_pwp,theta_res,theta_sat)*100,
+    #          col=c(rgb(1,0,0,.5),rgb(1,0,0,.75),grey.colors(n = 1, .8, .8, .5),grey.colors(n = 1, .8, .8, .5)), lty="dashed")
+    # 
+    #   # text model soil parameter
+    #   text(x=max(psi), y=c(theta_fc,theta_pwp,theta_res,theta_sat)*100, labels = c("fc","pwp","res","sat"),
+    #        col=c(rgb(1,0,0,.75),rgb(1,0,0,.75),"grey30","grey30"))
+    # }
   
     #legend(x=150000, y=60, legend = "estimation", col="black", lwd=3, bty="n")  
   
