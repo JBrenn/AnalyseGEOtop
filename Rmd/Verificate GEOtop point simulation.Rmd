@@ -16,31 +16,31 @@ This R Markdown document is made interactive using Shiny. To learn more, see [In
 
 if(!require(AnalyseGeotop))
 {
-  if(!require(devtools))
+  if(!require("devtools"))
   {
     install.packages(devtools)
-    require(devtools)
+    require("devtools")
   }
   install_github("AnalyseGeotop", "JBrenn")
-  require(AnalyseGeotop)
+  require("AnalyseGeotop")
 }
 
-if(!require(dygraphs))
+if(!require("dygraphs"))
 {
   install.packages(dygraphs)
-  require(dygraphs)
+  require("dygraphs")
 }
 
-if(!require(hydroGOF))
+if(!require("hydroGOF"))
 {
   install.packages(hydroGOF)
-  require(hydroGOF)
+  require("hydroGOF")
 }
 
-if(!require(ggplot2))
+if(!require("ggplot2"))
 {
   install.packages(ggplot2)
-  require(ggplot2)
+  require("ggplot2")
 }
 
 wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
