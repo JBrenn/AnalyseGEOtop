@@ -1,7 +1,7 @@
 # Function to load GEOtop point simulation output based on observations
 
 #  wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
-  wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
+#  wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006"
 #  data("observations_B2")
 #  
 #  load(file.path(wpath, "obs", "observation.RData"))
@@ -103,7 +103,8 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
 # postprocess Radiation components
   if ("postprocess_Rn" %in% varPointIn$geotop_what)
   {
-    Rn <- var_out[["net_downward_shortwave_flux"]] + var_out[["net_downward_longwave_flux"]]
+   # Rn <- var_out[["net_downward_shortwave_flux"]] + var_out[["net_downward_longwave_flux"]]
+    Rn <- (point_data$SWin.W.m2. - point_data$SWup.W.m2.) + (point_data$LWin.W.m2. - point_data$LWup.W.m2.)
     
     name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_Rn"])
     var_out[[name]] <- Rn

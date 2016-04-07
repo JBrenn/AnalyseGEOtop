@@ -63,6 +63,7 @@ if (file.exists(file.path(wpath,"PointOutValidation.RData"))) {
 varout <- var_out
 
 # adjust datetime: observations -1 hour
+time(obs$hour) <- as.POSIXlt(time(obs$hour))
 time(obs$hour)$mday <- time(obs$hour)$mday - 1
 time(obs$day) <- time(obs$day) - 1
 
