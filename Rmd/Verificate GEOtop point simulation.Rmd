@@ -43,13 +43,15 @@ if(!require("ggplot2"))
   require("ggplot2")
 }
 
-wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
+#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_B2_007/"
+wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_P2_003/"
 #wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006/"
 
 # obs data
 load(file.path(wpath, "obs", "observation.RData"))
 names(observation) <- c("hour", "day")
 obs <- observation
+#time(obs$hour) <- as.POSIXlt(time(obs$hour))
 
 # sim data
 if (file.exists(file.path(wpath,"PointOutValidation.RData"))) {
@@ -63,6 +65,11 @@ varout <- var_out
 # adjust datetime: observations -1 hour
 time(obs$hour)$mday <- time(obs$hour)$mday - 1
 time(obs$day) <- time(obs$day) - 1
+
+# get hourly lag between obs and sim
+ccf_temp <- stats::ccf(var_out[["air_temperature"]], obs$hour[,"air_temperature"], plot = FALSE)
+lag <- round(ccf_temp$acf[which.max(ccf_temp$acf)],0)
+time(obs$hour)$hour <- time(obs$hour)$hour + lag
 
 # load lookup table
 data("lookup_tbl_observation")
@@ -156,7 +163,13 @@ renderDygraph({
 #       dyRangeSelector() %>%
 #       dyRoller()
 #   } else {
-    
+  
+# from POSIXlt to POSIXct  
+ time(observation) <- as.POSIXct(time(observation))
+ time(add_var) <- as.POSIXct(time(add_var))
+ time(simulation) <- as.POSIXct(time(simulation))
+  
+  
     data <- merge(add_var, observation, simulation)
     names(data) <- c( "additional var", "observation", "simulation")
     
@@ -199,6 +212,9 @@ renderDataTable({
     simulation <- aggregate(simulation, as.yearmon(time(simulation)), sum, na.rm=F)
     observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
   } 
+  
+  time(observation) <- as.POSIXct(time(observation))
+  time(simulation) <- as.POSIXct(time(simulation))
   
   data <- merge(observation, simulation)
   
@@ -258,6 +274,9 @@ renderPlot({
       simulation <- aggregate(simulation, as.yearmon(time(simulation)), sum, na.rm=F)
       observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
     } 
+    
+  time(observation) <- as.POSIXct(time(observation))
+  time(simulation) <- as.POSIXct(time(simulation))
 
     data <- merge(observation, simulation)
     names(data) <- c("observation", "simulation")
