@@ -147,9 +147,10 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     # output depth in mm
     soil_head <- diff(c(0,cumsum(soil_thickness)))/2 + c(0,cumsum(soil_thickness))[-length(soil_thickness)-1]
     
-    soil_file <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
-    soil_time <- as.POSIXlt(strptime(x = as.character(soil_file[,1]), format = "%d/%m/%Y %H:%M", tz = "Etc/GMT+1"))
-    soil_header <- names(soil_file)[-c(1:6)]
+    soil_file_liq <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
+    soil_file_ice <- get.geotop.inpts.keyword.value(keyword="SoilIceContentProfileFile", wpath=wpath, data.frame=TRUE)
+    soil_time <- as.POSIXlt(strptime(x = as.character(soil_file_liq[,1]), format = "%d/%m/%Y %H:%M", tz = "Etc/GMT+1"))
+    soil_header <- names(soil_file_liq)[-c(1:6)]
   }
   
 # soil moisture content
@@ -161,7 +162,8 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     depth_mm <- as.integer(unique(split_mat[,4]))
     choice <- sapply(depth_mm, function(x) which.min(abs(soil_head-x)))
     
-    soil_data <- zoo(soil_file[,soil_header[choice]], soil_time)
+    soil_data_df <- soil_file_liq[,soil_header[choice]] +  soil_file_ice[,soil_header[choice]]
+    soil_data <- zoo(soil_data_df, soil_time)
     for (i in 1:length(depth_mm)) var_out[[paste("soil_moisture_content_", depth_mm[i], sep="")]] <- soil_data[,i]
   }  
   
