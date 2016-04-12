@@ -89,6 +89,27 @@ GEOtop_ReadPointData <- function(wpath,
     soil_head <- diff(c(0,cumsum(soil_thickness)))/2 + c(0,cumsum(soil_thickness))[-length(soil_thickness)-1]
     
 # soil moisture content liquid, soil moisture content ice, ...
+    # add liquid and ice water content
+    if (grepl("SoilLiqContentProfileFile", soil_output_files) & grepl("SoilLiqContentProfileFile", soil_output_files) &
+        "SoilLiqContentProfileFile" %in% keywords & "SoilIceContentProfileFile" %in% keywords) {
+      
+    soil_file_liq <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
+    names(soil_file_liq)[7:length(soil_file)] <-  paste(substr("SoilLiqContentProfileFile",1,14), soil_head, sep="")
+    soil_file_ice <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
+    names(soil_file_ice)[7:length(soil_file)] <-  paste(substr("SoilIceContentProfileFile",1,14), soil_head, sep="")
+    soil_file_tot <- soil_file_liq + soil_file_ice
+    names(soil_file_liq)[7:length(soil_file)] <-  paste("TotalSoilWaterContent", soil_head, sep="")
+      
+    out <- 
+      out %>% 
+      dplyr::left_join(as.data.table(soil_file_liq[,-1])) %>% 
+      dplyr::left_join(as.data.table(soil_file_ice[,-1]))%>% 
+      dplyr::left_join(as.data.table(soil_file_tot[,-1]))
+      
+    soil_output_files <- soil_output_files[-c(grep("SoilLiqContentProfileFile",soil_output_files),grep("SoilIceContentProfileFile",soil_output_files))]
+    
+    }
+    
     for (i in soil_output_files) {
       if (i %in% keywords)
       {
@@ -101,8 +122,6 @@ GEOtop_ReadPointData <- function(wpath,
           dplyr::left_join(as.data.table(soil_file[,-1]))
       }
     }
-
-# add liquid and ice water content
   
 # zoo object
   out <- zoo(out[, -c(1:5), with=F], time(point_data))  
