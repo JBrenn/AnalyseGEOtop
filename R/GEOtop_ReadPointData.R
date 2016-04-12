@@ -94,11 +94,11 @@ GEOtop_ReadPointData <- function(wpath,
         "SoilLiqContentProfileFile" %in% keywords & "SoilIceContentProfileFile" %in% keywords) {
       
     soil_file_liq <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
-    names(soil_file_liq)[7:length(soil_file)] <-  paste(substr("SoilLiqContentProfileFile",1,14), soil_head, sep="")
+    names(soil_file_liq)[7:length(soil_file_liq)] <-  paste(substr("SoilLiqContentProfileFile",1,14), soil_head, sep="")
     soil_file_ice <- get.geotop.inpts.keyword.value(keyword="SoilLiqContentProfileFile", wpath=wpath, data.frame=TRUE)
-    names(soil_file_ice)[7:length(soil_file)] <-  paste(substr("SoilIceContentProfileFile",1,14), soil_head, sep="")
+    names(soil_file_ice)[7:length(soil_file_ice)] <-  paste(substr("SoilIceContentProfileFile",1,14), soil_head, sep="")
     soil_file_tot <- soil_file_liq + soil_file_ice
-    names(soil_file_liq)[7:length(soil_file)] <-  paste("TotalSoilWaterContent", soil_head, sep="")
+    names(soil_file_tot)[7:length(soil_file_tot)] <-  paste("TotalSoilWaterContent", soil_head, sep="")
       
     out <- 
       out %>% 
