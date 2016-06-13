@@ -1,7 +1,7 @@
 ---
 title: "Verification GEOtop point simulation"
 author: "Johannes Brenner"
-date: "25. Juni 2015"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 runtime: shiny
 ---
@@ -47,7 +47,9 @@ if(!require("ggplot2"))
 #wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/Montecini_pnt_1_225_P2_003/"
 #wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa/1D/Kaltern/sim006/"
 #wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/HiResAlp/1D/B2_P2_Dynamic/B2_BrJ_017_DVM_002/"
-wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa//1D/DOMEF_1500/sim000/"
+#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa//1D/DOMEF_1500/sim000/"
+wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa//1D/DOMES_1500/sim000/"
+#wpath <- "/run/user/1000/gvfs/smb-share:server=sdcalp01.eurac.edu,share=data2/Simulations/Simulation_GEOtop_1_225_ZH/Vinschgau/SimTraining/BrJ/MonaLisa//1D/DOPAS_1500/sim000/"
 
 # obs data
 load(file.path(wpath, "obs", "observation.RData"))
@@ -71,9 +73,12 @@ time(obs$hour)$mday <- time(obs$hour)$mday - 1
 time(obs$day) <- time(obs$day) - 1
 
 # get hourly lag between obs and sim
-ccf_temp <- stats::ccf(var_out[["air_temperature"]], obs$hour[,"air_temperature"], plot = F, na.action = na.pass)
-lag <- round(ccf_temp$acf[which.max(ccf_temp$acf)],0)
-time(obs$hour)$hour <- time(obs$hour)$hour + lag
+
+if ("air_temperature" %in% names(obs$hour)) {
+  ccf_temp <- stats::ccf(var_out[["air_temperature"]], obs$hour[,"air_temperature"], plot = F, na.action = na.pass)
+  lag <- round(ccf_temp$acf[which.max(ccf_temp$acf)],0)
+  time(obs$hour)$hour <- time(obs$hour)$hour + lag
+}
 
 # load lookup table
 data("lookup_tbl_observation")
@@ -86,9 +91,9 @@ data("lookup_tbl_observation")
 inputPanel(
   #textInput(inputId = "simFolder", label = "Simulation folder", value = "")
   
-  selectInput(inputId = "variable", label = "discover variable", choices = dimnames(obs$day)[[2]], selected = "air_temperature"),
+  selectInput(inputId = "variable", label = "discover variable", choices = dimnames(obs$day)[[2]]),
   
-  selectInput(inputId = "add_variable", label = "additional variable (sim)", choices = dimnames(obs$day)[[2]], selected = "rainfall_amount"),
+  selectInput(inputId = "add_variable", label = "additional variable (sim)", choices = c(NA,dimnames(obs$day)[[2]]), selected = "rainfall_amount"),
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
@@ -115,21 +120,25 @@ renderDygraph({
   if (grepl("soil_temperature", input$variable)) name <- "soil_temperature"
   if (grepl("liquid_soil_water_pressure", input$variable)) name <- "liquid_soil_water_pressure"
   
-  add_name <- input$add_variable
-  if (grepl("soil_moisture_content",input$add_variable)) add_name <- "soil_moisture_content"
-  if (grepl("soil_temperature", input$add_variable)) add_name <- "soil_temperature"
-  if (grepl("liquid_soil_water_pressure", input$add_variable)) add_name <- "liquid_soil_water_pressure"
-   
+  if (!is.na(input$add_variable)) 
+  {
+    add_name <- input$add_variable
+    if (grepl("soil_moisture_content",input$add_variable)) add_name <- "soil_moisture_content"
+    if (grepl("soil_temperature", input$add_variable)) add_name <- "soil_temperature"
+    if (grepl("liquid_soil_water_pressure", input$add_variable)) add_name <- "liquid_soil_water_pressure"
+    add_units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==add_name]
+  }
+
   units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==name]
-  add_units <- lookup_tbl_observation$unit[lookup_tbl_observation$obs_var==add_name]
-  
+
   if (input$aggregation=="hour" | input$aggregation=="day")
   {
     observation <- obs[[input$aggregation]][,input$variable]
   } else observation <- obs[["day"]][,input$variable]
   
   simulation <- varout[[input$variable]]
-  add_var    <- varout[[input$add_variable]] * (-1)
+  if (!is.na(input$add_variable))
+    add_var    <- varout[[input$add_variable]] * (-1)
   
   if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
   if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
@@ -144,8 +153,12 @@ renderDygraph({
     observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
   } 
   
-  if (input$aggregation=="day")  add_var <- aggregate(add_var, as.Date(time(add_var)), sum, na.rm=T) 
-  if (input$aggregation=="month")  add_var <- aggregate(add_var, as.yearmon(time(add_var)), sum, na.rm=T) 
+    if (!is.na(input$add_variable))
+    {
+      if (input$aggregation=="day")  add_var <- aggregate(add_var, as.Date(time(add_var)), sum, na.rm=T) 
+      if (input$aggregation=="month")  add_var <- aggregate(add_var, as.yearmon(time(add_var)), sum, na.rm=T) 
+    }
+
   
  # data <- merge(observation, simulation)
   
@@ -170,17 +183,28 @@ renderDygraph({
   
 # from POSIXlt to POSIXct  
  time(observation) <- as.POSIXct(time(observation))
- time(add_var) <- as.POSIXct(time(add_var))
+ if (!is.na(input$add_variable)) time(add_var) <- as.POSIXct(time(add_var))
  time(simulation) <- as.POSIXct(time(simulation))
   
-  
+  if (is.na(input$add_variable)) {
+    data <- merge(observation, simulation)
+    names(data) <- c("observation", "simulation")
+  } else {
     data <- merge(add_var, observation, simulation)
     names(data) <- c( "additional var", "observation", "simulation")
-    
-    dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
+  }
+
+  if (is.na(input$add_variable)) {
+      dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
+      dyRangeSelector() %>%
+      dyRoller()
+  } else {
+      dygraph(data, ylab=paste("[",units,"]",sep="")) %>%
       dyRangeSelector() %>%
       dyRoller() %>%
       dySeries(name = "additional var", axis = "y2", stepPlot = TRUE, fillGraph = TRUE, label = paste("[-",add_units,"]",sep=""))
+  }  
+ 
     
 #  }
  
