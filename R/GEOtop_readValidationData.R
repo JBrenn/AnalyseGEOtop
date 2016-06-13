@@ -55,25 +55,28 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
   
 # get variables direct or sums from point data
   var_out <- list()
-  for (i in 1:length(varPointIn_what_direct)) 
+  if (dim(varPointIn)[1]!=0) 
   {
-    name <- as.character(varPointIn_name_direct)[i]
-    var <- as.character(varPointIn_what_direct)[i]
-    i_split <- strsplit(as.character(var),"%")
-    
-    if (length(i_split[[1]])==1) {
-      var_out[[name]] <- point_data[,var]
-    } else {
-      if (i_split[[1]][3]=="plus") {
-        var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
-        var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
-        var_out[[name]] <- point_data[ ,i_split[[1]][1] ] + point_data[ ,i_split[[1]][2] ]
+    for (i in 1:length(varPointIn_what_direct)) 
+    {
+      name <- as.character(varPointIn_name_direct)[i]
+      var <- as.character(varPointIn_what_direct)[i]
+      i_split <- strsplit(as.character(var),"%")
+      
+      if (length(i_split[[1]])==1) {
+        var_out[[name]] <- point_data[,var]
       } else {
-        var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
-        var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
-        var_out[[name]] <- point_data[ ,i_split[[1]][1] ] - point_data[ ,i_split[[1]][2] ]
+        if (i_split[[1]][3]=="plus") {
+          var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
+          var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
+          var_out[[name]] <- point_data[ ,i_split[[1]][1] ] + point_data[ ,i_split[[1]][2] ]
+        } else {
+          var_out[[ i_split[[1]][1] ]] <- point_data[ ,i_split[[1]][1] ]
+          var_out[[ i_split[[1]][2] ]] <- point_data[ ,i_split[[1]][2] ]
+          var_out[[name]] <- point_data[ ,i_split[[1]][1] ] - point_data[ ,i_split[[1]][2] ]
+        }
+        
       }
-   
     }
   }
 
@@ -120,9 +123,7 @@ GEOtop_ReadValidationData <- function(wpath, obs, soil_files=TRUE, save_rData=TR
     name <- as.character(varPointIn$name[varPointIn$geotop_what%in%"postprocess_EB"])
     var_out[[name]] <- EB
   }
-  
 
-   
 # get soil information
   if (length(sapply(df_names, grep, pattern="soil_moisture_content", value=T)) > 1 |
       length(sapply(df_names, grep, pattern="soil_temperature", value=T)) > 1 |
