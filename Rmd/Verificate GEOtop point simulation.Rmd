@@ -97,7 +97,9 @@ inputPanel(
   
   radioButtons(inputId = "aggregation", label = "aggregation", choices = c("hour","day","month"), selected = "day", inline = FALSE),
   
-  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE)
+  radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE),
+  
+  downloadButton(outputId = "downloadData", label = "Download")
   
   # radioButtons(inputId = "cum", label = "cumulated or time series", choices = c("time series","cumulated over time"), selected = "time series", inline = FALSE)
   
@@ -265,6 +267,44 @@ renderDataTable({
   gofs <- gofs[,c(2,3,4,5,6,1)]
 
 }, options = list(pageLength=5, lengthMenu=c(5, 10, 15, 20)))
+
+
+# data download
+  output$downloadData <- downloadHandler(filename = function() { 
+    paste(input$variable, "_", input$aggregation, ".csv", sep="") 
+    },
+    content = function(file) {
+  if (input$aggregation=="hour" | input$aggregation=="day") {
+    observation <- obs[[input$aggregation]][,input$variable]
+  } else { observation <- obs[["day"]][,input$variable] }
+  
+  simulation <- varout[[input$variable]]
+  
+  if (input$aggregation=="day" & input$flux_amount=="flux") simulation <- aggregate(simulation, as.Date(time(simulation)), mean, na.rm=T) 
+  if (input$aggregation=="day" & input$flux_amount=="amount") simulation <- aggregate(simulation, as.Date(time(simulation)), sum, na.rm=F)
+  if (input$aggregation=="month" & input$flux_amount=="flux") 
+  {
+    simulation <- aggregate(simulation, as.yearmon(time(simulation)), mean, na.rm=T)
+    observation <- aggregate(observation, as.yearmon(time(observation)), mean, na.rm=T)
+  } 
+  if (input$aggregation=="month" & input$flux_amount=="amount") 
+  {
+    simulation <- aggregate(simulation, as.yearmon(time(simulation)), sum, na.rm=F)
+    observation <- aggregate(observation, as.yearmon(time(observation)), sum, na.rm=F)
+  } 
+  
+  if (input$aggregation=="hour")
+  {
+      time(observation) <- as.POSIXct(time(observation))
+      time(simulation) <- as.POSIXct(time(simulation))
+  }
+  
+  data <- merge(observation, simulation)
+  if (input$aggregation=="month") datetime <- format(time(data), "%Y-%m") else datetime <- time(data)
+
+  df <- data.frame(datetime = datetime, coredata(data))
+  write.csv(df, file, sep=",", quote=F, row.names = F) 
+    })
 
 ```
 
