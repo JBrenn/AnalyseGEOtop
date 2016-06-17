@@ -74,11 +74,12 @@ time(obs$day) <- time(obs$day) - 1
 
 # get hourly lag between obs and sim
 
-if ("air_temperature" %in% names(obs$hour)) {
-  ccf_temp <- stats::ccf(var_out[["air_temperature"]], obs$hour[,"air_temperature"], plot = F, na.action = na.pass)
-  lag <- round(ccf_temp$acf[which.max(ccf_temp$acf)],0)
-  time(obs$hour)$hour <- time(obs$hour)$hour + lag
-}
+# if ("air_temperature" %in% names(obs$hour)) {
+#   ccf_temp <- stats::ccf(var_out[["air_temperature"]], obs$hour[,"air_temperature"], plot = F, na.action = na.pass)
+#   lag <- round(ccf_temp$acf[which.max(ccf_temp$acf)],0)
+#   time(obs$hour)$hour <- time(obs$hour)$hour + lag
+# }
+time(obs$hour)$hour <- time(obs$hour)$hour + 1
 
 # load lookup table
 data("lookup_tbl_observation")
