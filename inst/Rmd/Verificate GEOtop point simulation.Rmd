@@ -99,6 +99,8 @@ inputPanel(
   
   radioButtons(inputId = "flux_amount", label = "flux or amount", choices = c("flux","amount"), selected = "flux", inline = FALSE),
   
+  radioButtons(inputId = "no_winter", label = "remove winter", choices = c("YES","NO"), selected = "NO", inline = FALSE),
+
   downloadButton(outputId = "downloadData", label = "Download")
   
   # radioButtons(inputId = "cum", label = "cumulated or time series", choices = c("time series","cumulated over time"), selected = "time series", inline = FALSE)
@@ -187,6 +189,13 @@ renderDygraph({
  time(observation) <- as.POSIXct(time(observation))
  if (!is.na(input$add_variable)) time(add_var) <- as.POSIXct(time(add_var))
  time(simulation) <- as.POSIXct(time(simulation))
+ 
+ if (input$no_winter == "YES")
+ {
+   month <- as.integer(format(time(simulation), "%m"))
+   winter <- which(month == 1 | month == 2 | month ==12)
+   coredata(simulation)[winter] <- NA  
+ }
   
   if (is.na(input$add_variable)) {
     data <- merge(observation, simulation)
@@ -246,6 +255,13 @@ renderDataTable({
   time(observation) <- as.POSIXct(time(observation))
   time(simulation) <- as.POSIXct(time(simulation))
   
+     if (input$no_winter == "YES")
+ {
+   month <- as.integer(format(time(simulation), "%m"))
+   winter <- which(month == 1 | month == 2 | month ==12)
+   coredata(simulation)[winter] <- NA  
+ }
+  
   data <- merge(observation, simulation)
   
   gofs <- gof(sim = data$simulation, obs=data$observation, na.rm = T)
@@ -255,8 +271,11 @@ renderDataTable({
   
   mon <- as.numeric(format(time(data), "%m"))
   
-  datadjf <-  data[mon==12 | mon==1 | mon==2,]
-  gofs$DJF <-  c(gof(sim = datadjf$simulation, obs=datadjf$observation, na.rm = T))
+   if (input$no_winter == "NO") 
+   {
+      datadjf <-  data[mon==12 | mon==1 | mon==2,]
+      gofs$DJF <-  c(gof(sim = datadjf$simulation, obs=datadjf$observation, na.rm = T))
+   }
   datamam <-  data[mon==3 | mon==4 | mon==5,]
   gofs$MAM <-  c(gof(sim = datamam$simulation, obs=datamam$observation, na.rm = T))
   datajja <-  data[mon==6 | mon==7 | mon==8,]
@@ -264,7 +283,12 @@ renderDataTable({
   datason <-  data[mon==9 | mon==10 | mon==11,]
   gofs$SON <-  c(gof(sim = datason$simulation, obs=datason$observation, na.rm = T))
   
-  gofs <- gofs[,c(2,3,4,5,6,1)]
+   if (input$no_winter == "NO") {
+       gofs <- gofs[,c(2,3,4,5,6,1)]
+   } else {
+       gofs <- gofs[,c(2,3,4,5,1)]
+   }
+
 
 }, options = list(pageLength=5, lengthMenu=c(5, 10, 15, 20)))
 
@@ -345,6 +369,13 @@ renderPlot({
     
   time(observation) <- as.POSIXct(time(observation))
   time(simulation) <- as.POSIXct(time(simulation))
+  
+   if (input$no_winter == "YES")
+ {
+   month <- as.integer(format(time(simulation), "%m"))
+   winter <- which(month == 1 | month == 2 | month ==12)
+   coredata(simulation)[winter] <- NA  
+ }
 
     data <- merge(observation, simulation)
     names(data) <- c("observation", "simulation")
