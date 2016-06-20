@@ -27,7 +27,7 @@ Geotop_VisSoilWaterRet_gg <- function(alpha = 0.94, n = 1.5, theta_sat = 0.50, t
     #stat_density2d(aes(alpha=..level..), geom="polygon") +
     #geom_density_2d(col="black", alpha=.5, lineend="round", linejoin="round", na.rm=TRUE) +
     #scale_alpha_continuous(limits=c(0,0.2), breaks=seq(0,0.2,by=0.025)) +
-    geom_point(colour="red", alpha=0.05, size=.5) +
+    geom_point(colour="red", alpha=0.15, size=.5) +
     geom_line(data = pFdata, mapping = aes(x = log10(psi), y= swc), alpha = .5, col="red") +
     ylim(0,60) + xlim(0,7) + 
     guides(alpha=FALSE, color=FALSE) + 
