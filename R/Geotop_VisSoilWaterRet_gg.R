@@ -23,16 +23,33 @@ Geotop_VisSoilWaterRet_gg <- function(alpha = 0.94, n = 1.5, theta_sat = 0.50, t
   
   pFdata <- as.data.frame(cbind(swc, psi))
   
+  datapoly1 <- data.frame(id = rep(1,4), x = c(1.8,1.8,2.5,2.5), y = c(0,60,60,0))
+  datapoly2 <- data.frame(id = rep(1,4), x = c(2.5,2.5,4.2,4.2), y = c(0,60,60,0))
+  
   p <- ggplot(observed, aes(x = log10(SWP), y = SWC), log="x") + 
     #stat_density2d(aes(alpha=..level..), geom="polygon") +
     #geom_density_2d(col="black", alpha=.5, lineend="round", linejoin="round", na.rm=TRUE) +
     #scale_alpha_continuous(limits=c(0,0.2), breaks=seq(0,0.2,by=0.025)) +
-    geom_point(colour="red", alpha=0.15, size=.5) +
-    geom_line(data = pFdata, mapping = aes(x = log10(psi), y= swc), alpha = .5, col="red") +
+    geom_vline(xintercept = c(1.8,2.5,4.2), col="grey") +
+    geom_polygon(datapoly1, mapping = aes(x = x, y = y), fill=rgb(0,1,0,.15), col="grey") +
+    geom_polygon(datapoly2, mapping = aes(x = x, y = y), fill=rgb(0,1,0,.25), col="grey") +
+    geom_text(mapping = aes(label="FieldCapacity", x=2.15, y=57), alpha=.6, col="darkgreen", size=4) +
+    geom_text(mapping = aes(label="PermanentWiltingPoint", x=4.2, y=45), alpha=.6, col="darkgreen", size=4, angle=90) +
+    geom_point(colour="red", alpha=0.15, size=1) +
+    geom_line(data = pFdata, mapping = aes(x = log10(psi), y= swc), alpha = .5, col="red", size=2) +
+    #coord_trans(x = "log10") +
+    # scale_x_log10(
+    #    breaks = scales::trans_breaks("log10", function(x) 10^x),
+    #    labels = scales::trans_format("log10", scales::math_format(10^.x))
+    #  ) +
     ylim(0,60) + xlim(0,7) + 
     guides(alpha=FALSE, color=FALSE) + 
-    ylab("SWC") + xlab("pF") + 
-    theme(legend.position="bottom")
+    ylab("SWC in vol.%") + xlab("pF | log10(SWP in hPa)") + 
+    theme(axis.text=element_text(size=14), axis.title=element_text(size=16,face="bold")) +
+    #scale_x_log10(name = "hPa", breaks = c(0,10,10^2,10^3,10^4,10^5,10^6,10^7), labels = scales::math_format(.x)) + 
+    theme_bw() +
+    #theme(panel.grid.minor = element_blank())
+    annotation_logticks(base = 10, sides = "b")
   
   if (add_ref_curves)
   {
@@ -49,18 +66,18 @@ Geotop_VisSoilWaterRet_gg <- function(alpha = 0.94, n = 1.5, theta_sat = 0.50, t
     txt <- as.data.frame(c("clay","loam","sand")); names(txt) <- "lab"
     txt$x <- c(0.1,0.1,0.1); txt$y <- c(47,41,37)
     
-    p <- p + geom_line(data = swc_clay, mapping = aes(x = log10(psi), y= swc_clay), alpha = .25) +
-      geom_line(data = swc_loam, mapping = aes(x = log10(psi), y= swc_loam), alpha = .25) +
-      geom_line(data = swc_sand, mapping = aes(x = log10(psi), y= swc_sand), alpha = .25) + 
-      geom_text(data = txt, mapping = aes(label=lab, x=x, y=y), alpha=.6)
+    p <- p + geom_line(data = swc_clay, mapping = aes(x = log10(psi), y= swc_clay), alpha = .25, size=1.25) +
+      geom_line(data = swc_loam, mapping = aes(x = log10(psi), y= swc_loam), alpha = .25, size=1.25) +
+      geom_line(data = swc_sand, mapping = aes(x = log10(psi), y= swc_sand), alpha = .25, size=1.25) + 
+      geom_text(data = txt, mapping = aes(label=lab, x=x, y=y), alpha=.6, size=3.5)
   }
   
   if (all(is.na(observed$SWC))) {
-    gg <- ggExtra::ggMarginal(p, type = c("density"), margins = "x")
+    gg <- ggExtra::ggMarginal(p, type = c("density"), margins = "x",  xparams = list(size=2))
   } else if (all(is.na(observed$SWP))) {
-    gg <- ggExtra::ggMarginal(p, type = c("density"), margins = "y")
+    gg <- ggExtra::ggMarginal(p, type = c("density"), margins = "y",  yparams = list(size=2))
   } else {
-    gg <- ggExtra::ggMarginal(p, type = c("density"), margins = "both")
+    gg <- ggExtra::ggMarginal(p, type = c("density"), margins = "both",  xparams = list(size=2),  yparams = list(size=2))
   }
   
   return(gg)
