@@ -4,8 +4,10 @@ Date: 2015-04-17
 Title: Analyse GEOtop simulations
 Author: Johannes Brenner <Johannes.Brenner@eurac.com>
 Maintainer: Johannes Brenner <Johannes.Brenner@eurac.com>
-Description: Read output from GEOtop simulations and analyse in terms of e.g. hydrological budget, simulation validation, maps animation.
-Depends: R (>= 3.0.0)
+Description: Read output from GEOtop simulations and analyse in terms of e.g.
+    hydrological budget, simulation validation, maps animation.
+Depends:
+    R (>= 3.0.0)
 License: LGPL (>= 2)
 LazyData: Yes
 LazyLoad: Yes
@@ -24,3 +26,4 @@ Imports:
     data.table,
     dplyr,
     gridExtra
+RoxygenNote: 5.0.1
