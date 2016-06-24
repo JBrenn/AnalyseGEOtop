@@ -1,5 +1,5 @@
-\name{GEOtop_VisSoilWaterRet}
-\alias{GEOtop_VisSoilWaterRet}
+\name{GEOtop_VisSoilWaterRet_gg}
+\alias{GEOtop_VisSoilWaterRet_gg}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Visualisation Soil Water Retention Curve with ggplot
@@ -8,7 +8,7 @@ Visualisation Soil Water Retention Curve with ggplot
 Visulisation of the Soil Water Retention Curve van Genuchten Model (1980). For soil water calculation from soil water pressure head (hPa or cm water column) the package \pkg{soilwater} is used. Density functions for provided soil depths are visualized as side plots.
 }
 \usage{
-GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, accurate=10,
+GEOtop_VisSoilWaterRet_gg(alpha, n, theta_sat, theta_res, accurate=10,
                         observed=NULL, add_ref_curves=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
