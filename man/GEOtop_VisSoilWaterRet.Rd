@@ -61,7 +61,7 @@ GEOtop_VisSoilWaterRet(alpha, n, theta_sat, theta_res, theta_pwp, theta_fc,
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-If multiple vanGenuchten - Mualem models sould be visualised, simply provide alpha, n, theta_sat, theta_res, and ksat values as vectors. Provide alpha as a named vector in order to specify legend names. 
+If multiple vanGenuchten - Mualem models should be visualised, simply provide alpha, n, theta_sat, theta_res, and ksat values as vectors. Provide alpha as a named vector in order to specify legend names. 
 }
 \value{
 %%  ~Describe the value returned

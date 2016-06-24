@@ -22,4 +22,5 @@ Imports:
     RSAGA,
     stringr,
     data.table,
-    dplyr
+    dplyr,
+    gridExtra

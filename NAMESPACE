@@ -14,6 +14,7 @@ import(RSAGA)
 import(stringr)
 import(data.table)
 import(dplyr)
+import(gridExtra)
 
 # Export all names
 exportPattern(".")
