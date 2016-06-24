@@ -8,7 +8,8 @@ Visualize .asc raster map
 Visualize .asc raster map (GEOtop map output) with ggplot
 }
 \usage{
-GEOtop_ReadPlotRst(map, date, variable, layer, limits, legend, lowcol="#f7fbff", highcol="#08306b")
+GEOtop_ReadPlotRst(map, date, variable, layer, limits, legend, 
+                    lowcol="#f7fbff", highcol="#08306b")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
