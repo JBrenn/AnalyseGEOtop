@@ -68,18 +68,18 @@ Johannes Brenner, \email{Johannes.Brenner@eurac.edu}
 }
 \examples{
 ## Not run:
-#library(AnalyseGeotop)
-#
-#data("Kaltern_SoilWatRet")
-#
-#colors <- c("red","#E69F00","blue","darkgreen")
-#
-#gg <- Geotop_VisSoilWaterRet_gg(alpha = parameter$alpha, n = parameter$n, 
-#                                theta_sat = parameter$thetaS, 
-#                                theta_res = rep(.05,length(parameter$alpha)), 
-#                                accurate = 10, 
-#                                add_ref_curves = T, observed = observed, 
-#                                colors = colors)
+library(AnalyseGeotop)
+
+data("Kaltern_SoilWatRet")
+
+colors <- c("red","#E69F00","blue","darkgreen")
+
+gg <- Geotop_VisSoilWaterRet_gg(alpha = parameter$alpha, n = parameter$n, 
+                                theta_sat = parameter$thetaS, 
+                                theta_res = rep(.05,length(parameter$alpha)), 
+                                accurate = 10, 
+                                add_ref_curves = T, observed = observed, 
+                                colors = colors)
 ## End(**Not run**)                                
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
