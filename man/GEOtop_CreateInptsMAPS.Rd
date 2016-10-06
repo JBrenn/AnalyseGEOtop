@@ -8,9 +8,10 @@ Create GEOtop input maps
 Create input maps for hydrological modeling (e.g. GEOtop, mHM) using \pkg{RSAGA}. Base maps are a digital elevation model and a map locating the basin outlet (defined by -1). Postprocessing includes terrain analysis (slope, aspect, curvature), flow direction and accumulation, as well as sky view factor calculation. All maps, including landcover, soil type, leaf area index (LAI) and bedrock (if provided), are stored in SAGA .srgd format. Further processing includes watershed delineation, resampling to required resolution, masking to the extent of the watershed (either for all maps or for landcover map only) and writing of GEOtop or mHM input ascii files.
 }
 \usage{
-GEOtop_CreateInptsMAPS(dem, res, stream_gauge, name_gauge, preprocess=TRUE, 
-SkyView=FALSE, FlowAccum=FALSE, rivernet=FALSE,
-soil=FALSE, landcover=FALSE, bedrock=FALSE, LAI=FALSE,
+GEOtop_CreateInptsMAPS(dem, res, stream_gauge, name_gauge, 
+preprocess=TRUE, 
+SkyView=FALSE, FlowAccum=FALSE, rivernet=FALSE, idgauges=FALSE,
+soil=FALSE, landcover=FALSE, bedrock=FALSE, LAI=FALSE, geology=FALSE,
 SAGAENV, mask_only_lc=FALSE, GEOtop=FALSE, MHM=FALSE, ASCII=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -42,17 +43,26 @@ SAGAENV, mask_only_lc=FALSE, GEOtop=FALSE, MHM=FALSE, ASCII=TRUE)
       \item{rivernet}{
   boolean, TRUE: create river network .asc map; default = FALSE
   }
+        \item{idgauges}{
+  boolean, TRUE: map of gauges IDs, describing gauge locations provided in working directory, ascii format, name: idgauges.asc; default = FALSE
+  }
   \item{soil}{
   boolean, TRUE: soil type map provided in working directory, ascii format, name: soil.asc; FALSE: no soil type map provided; default = FALSE
   }
    \item{landcover}{
   boolean, TRUE: landcover map provided in working directory, ascii format, name: landcover.asc; FALSE: no landcover map provided; default = FALSE
   }
+  \item{lc_scenes}{
+  chr vector, provide names of .asc maps containing landcover scences (function will loop over them), e.g. c("lc_1990.asc", "lc_2000.asc", "lc_2006.asc")
+  }
   \item{bedrock}{
   boolean, TRUE: bedrock map provided in working directory, ascii format, name: bedrock.asc; FALSE: no bedrock map provided; default = FALSE
   }
     \item{LAI}{
   boolean, TRUE: LAI map provided in working directory, ascii format, name: lai.asc; FALSE: no LAI map provided; default = FALSE
+  }
+  \item{geology}{
+  boolean, TRUE: geology class map provided in working directory, ascii format, name: geology.asc; FALSE: no LAI map provided; default = FALSE
   }
   \item{SAGAENV}{
   SAGA environment, created with function \emph{rsaga.env} of the \pkg{RSAGA} package

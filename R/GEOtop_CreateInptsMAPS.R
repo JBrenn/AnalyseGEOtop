@@ -53,9 +53,14 @@
   #rsaga.get.usage(libs = , module = , env=SAGAENV)
 
 GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
-                                  preprocess=TRUE, SkyView=FALSE, FlowAccum=FALSE, rivernet=FALSE,
-                                  soil=FALSE, landcover=FALSE, bedrock=FALSE, LAI=FALSE,
-                                  SAGAENV, mask_only_lc=FALSE,
+                                  preprocess=TRUE, 
+                                  SkyView=FALSE, FlowAccum=FALSE, rivernet=FALSE, idgauges=FALSE,
+                                  soil=FALSE, landcover=FALSE, lc_scenes=c("landcover.asc"),
+                                  bedrock=FALSE, LAI=FALSE, geology=FALSE,
+                                  SAGAENV = rsaga.env(path = "/usr/bin", 
+                                                      modules = "/usr/lib/x86_64-linux-gnu/saga/", 
+                                                      version = "2.2.3"), 
+                                  mask_only_lc=FALSE,
                                   GEOtop=FALSE, MHM=FALSE, ASCII=TRUE)
 {
   # load necessary libraries
@@ -68,8 +73,8 @@ GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
   # SAGAENV <- rsaga.env(path = "C:/Program Files (x86)/SAGA-GIS2.1.0", 
   #                      modules = "C:/Program Files (x86)/SAGA-GIS2.1.0/modules")
   # LINUX zen
-  # SAGAENV <- rsaga.env(path = "/usr/bin", 
-  #                      modules = "/usr/lib/x86_64-linux-gnu/saga/", version = "2.2.3")
+   SAGAENV <- rsaga.env(path = "/usr/bin", 
+                        modules = "/usr/lib/x86_64-linux-gnu/saga/", version = "2.2.3")
   
   if (preprocess)
   {
@@ -108,7 +113,8 @@ GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
 #                                     ASPECT="./Aspect/aspect.srgd",
 #                                     METHOD=1  # Maximum Triangle Slope Tarboton1997 #
 #                                     ))
-    int.saga.version <- as.integer(substr(SAGAENV$version,1,1)) *100 + as.integer(substr(SAGAENV$version,3,3)) *10 + as.integer(substr(SAGAENV$version,5,5))
+    int.saga.version <- as.integer(substr(SAGAENV$version,1,1)) *100 + 
+      as.integer(substr(SAGAENV$version,3,3)) *10 + as.integer(substr(SAGAENV$version,5,5))
     
     if (int.saga.version < 211) {
       rsaga.local.morphometry(in.dem = "./DEM/dem.sgrd", 
@@ -155,6 +161,7 @@ GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
 #END POSTPROCESS
 
   # additionally data from ascii to .srgd
+   
   # soil
   if (soil)
   { 
@@ -169,9 +176,11 @@ GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
   {
     dir.create("Landcover")
     
-    rsaga.esri.to.sgrd(in.grids = "./landcover.asc", out.sgrds = "./Landcover/landcover.sgrd" ,
-                       env = SAGAENV)
+    for (lc in lc_scenes)
+      rsaga.esri.to.sgrd(in.grids = lc, out.sgrds = paste("./Landcover/",gsub("asc", "sgrd", lc),sep=""),
+                         env = SAGAENV)
   }
+   
   # bedrock
   if (bedrock)
   {
@@ -189,6 +198,24 @@ GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
     rsaga.esri.to.sgrd(in.grids = "./lai.asc", out.sgrds = "./LAI/lai.sgrd" ,
                        env = SAGAENV)
   }
+   
+   # idgauges
+   if (idgauges) 
+   {
+     dir.create("Idgauges")
+     
+     rsaga.esri.to.sgrd(in.grids = "./idgauges.asc", out.sgrds = "./Idgauges/idgauges.sgrd" ,
+                        env = SAGAENV)
+   }  
+   
+   # geology
+   if (geology) 
+   {
+     dir.create("Geology")
+     
+     rsaga.esri.to.sgrd(in.grids = "./geology.asc", out.sgrds = "./Geology/geology.sgrd" ,
+                        env = SAGAENV)
+   }  
 
   print("WATERSHED DELINEATION")
   
@@ -211,6 +238,11 @@ GEOtop_CreateInptsMAPS <- function(dem, res, stream_gauge, minArea, name_gauge,
 #                      param = list(INPUT=paste("./Watershed/watershed",name_gauge,".sgrd",sep=""),
 #                                   OUTPUT=paste("./Watershed/watershed",name_gauge,".sgrd",sep="")))
 
+# write out shape file of watershed
+#  rsaga.geoprocessor(lib = "shapes_grid", module = 6, 
+#                     param = list(GRID="./Watershed/watershed", 
+#                                  POLYGONS=paste("./Watershed/watershed_",name_gauge,sep="")))
+  
 # DEM dummy | get resolution of input dem
 dem_header <- read.ascii.grid.header(dem)
 
@@ -286,10 +318,11 @@ if (res!=dem_header$cellsize)
   #10 Landcover
   if (landcover)
   {
-    rsaga.geoprocessor(lib="grid_tools", module=0, env = SAGAENV,
-                       param=list(INPUT="Landcover/landcover.sgrd", 
-                                  USER_GRID=paste("./Landcover/landcover",res,".sgrd",sep=""),
-                                  USER_SIZE=res, SCALE_UP_METHOD=9))
+    for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+      rsaga.geoprocessor(lib="grid_tools", module=0, env = SAGAENV,
+                         param=list(INPUT=paste("Landcover/",lc,".sgrd",sep=""), 
+                                    USER_GRID=paste("./Landcover/",lc,res,".sgrd",sep=""),
+                                    USER_SIZE=res, SCALE_UP_METHOD=9))
     #   rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
     #                      param = list(GRID=paste("./Landcover/landcover",res,".sgrd",sep=""), 
     #                                   MASK=paste("./DEM/dem",res,".sgrd",sep=""),
@@ -309,11 +342,27 @@ if (res!=dem_header$cellsize)
     #                                   MASKED=paste("./Bedrock/bedrock",res,".sgrd",sep="")))
   }
   
+  # 12 LAI
   if (LAI)
     rsaga.geoprocessor(lib="grid_tools", module=0, env = SAGAENV,
                        param=list(INPUT="LAI/lai.sgrd", 
                                   USER_GRID=paste("./LAI/lai",res,".sgrd",sep=""),
                                   USER_SIZE=res, SCALE_UP_METHOD=2))
+  
+  # 13 Idgauges
+  if (idgauges)
+    rsaga.geoprocessor(lib="grid_tools", module=0, env = SAGAENV,
+                       param=list(INPUT="Idgauges/idgauges.sgrd", 
+                                  USER_GRID=paste("./Idgauges/idgauges",res,".sgrd",sep=""),
+                                  USER_SIZE=res, SCALE_UP_METHOD=2))
+  
+  # 13 Geology
+  if (geology)
+    rsaga.geoprocessor(lib="grid_tools", module=0, env = SAGAENV,
+                       param=list(INPUT="Geology/geology.sgrd", 
+                                  USER_GRID=paste("./Geology/geology",res,".sgrd",sep=""),
+                                  USER_SIZE=res, SCALE_UP_METHOD=2))
+  
 } else {
   # rename output
   file.copy(from = c(paste("./Watershed/watershed",name_gauge,c(".sgrd",".mgrd",".sdat"),sep=""),
@@ -339,9 +388,12 @@ if (res!=dem_header$cellsize)
     overwrite=TRUE)
   
   if (landcover)
-    file.copy(from = c(paste("./Landcover/landcover",c(".sgrd",".mgrd",".sdat"),sep="")),
-           to = c(paste("./Landcover/landcover",res,c(".sgrd",".mgrd",".sdat"),sep="")),
-           overwrite=TRUE)
+  {
+    for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+      file.copy(from = c(paste("./Landcover/",lc,c(".sgrd",".mgrd",".sdat"),sep="")),
+                to = c(paste("./Landcover/",lc,res,c(".sgrd",".mgrd",".sdat"),sep="")),
+                overwrite=TRUE)
+  }
   
   if (bedrock)
     file.copy(from = c(paste("./Bedrock/bedrock",c(".sgrd",".mgrd",".sdat"),sep="")),
@@ -362,16 +414,27 @@ if (res!=dem_header$cellsize)
     file.copy(from = c(paste("./LAI/lai",c(".sgrd",".mgrd",".sdat"),sep="")),
               to = c(paste("./LAI/lai",res,c(".sgrd",".mgrd",".sdat"),sep="")),
               overwrite=TRUE)
+  
+  if (idgauges)
+    file.copy(from = c(paste("./Idgauges/idgauges",c(".sgrd",".mgrd",".sdat"),sep="")),
+              to = c(paste("./Idgauges/idgauges",res,c(".sgrd",".mgrd",".sdat"),sep="")),
+              overwrite=TRUE)
+  
+  if (geology)
+    file.copy(from = c(paste("./Geology/geology",c(".sgrd",".mgrd",".sdat"),sep="")),
+              to = c(paste("./Geology/geology",res,c(".sgrd",".mgrd",".sdat"),sep="")),
+              overwrite=TRUE)
 }
 
 if (mask_only_lc) {
   #7 Landcover
   if (landcover)
   {
-    rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
-                       param = list(GRID=paste("./Landcover/landcover",res,".sgrd",sep=""), 
-                                    MASK=paste("./Watershed/watershed",name_gauge,res,".sgrd",sep=""),
-                                    MASKED=paste("./Landcover/landcover",res,".sgrd",sep="")))
+    for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+      rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
+                        param = list(GRID=paste("./Landcover/",lc,res,".sgrd",sep=""), 
+                                     MASK=paste("./Watershed/watershed",name_gauge,res,".sgrd",sep=""),
+                                     MASKED=paste("./Landcover/",lc,res,".sgrd",sep="")))
 #     rsaga.geoprocessor(lib = "grid_tools", module = 17, env=SAGAENV,
 #                        param = list(INPUT=paste("./Landcover/landcover",res,".sgrd",sep=""),
 #                                     OUTPUT=paste("./Landcover/landcover",res,".sgrd",sep="")))
@@ -388,9 +451,13 @@ if (mask_only_lc) {
                                   OUTPUT=paste("./DEM/dem",res,".sgrd",sep="")))
   
   # fill sinks DEM in new res
-  rsaga.fill.sinks(in.dem = paste("./DEM/dem",res,".sgrd",sep=""), 
-                   out.dem = paste("./DEM/dem_filled",res,".sgrd",sep=""), 
-                   env = SAGAENV)  
+  #rsaga.fill.sinks(in.dem = paste("./DEM/dem",res,".sgrd",sep=""), 
+  #                 out.dem = paste("./DEM/dem_filled",res,".sgrd",sep=""), 
+  #                 env = SAGAENV)  
+  # find sinks in DEM and deepen terrain new res
+  rsaga.sink.removal(in.dem = paste("./DEM/dem",res,".sgrd",sep=""), 
+                     out.dem =  paste("./DEM/dem_filled",res,".sgrd",sep=""), 
+                     env = SAGAENV, method = "deepen")
   
   #2 Aspect
   rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
@@ -465,13 +532,16 @@ if (mask_only_lc) {
   #9 Landcover
   if (landcover)
   {
-    rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
-                       param = list(GRID=paste("./Landcover/landcover",res,".sgrd",sep=""), 
-                                    MASK=paste("./Watershed/watershed",name_gauge,res,".sgrd",sep=""),
-                                    MASKED=paste("./Landcover/landcover",res,".sgrd",sep="")))
-    rsaga.geoprocessor(lib = "grid_tools", module = 17, env=SAGAENV,
-                       param = list(INPUT=paste("./Landcover/landcover",res,".sgrd",sep=""),
-                                    OUTPUT=paste("./Landcover/landcover",res,".sgrd",sep="")))
+    for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+    {
+      rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
+                         param = list(GRID=paste("./Landcover/",lc,res,".sgrd",sep=""), 
+                                      MASK=paste("./Watershed/watershed",name_gauge,res,".sgrd",sep=""),
+                                      MASKED=paste("./Landcover/",lc,res,".sgrd",sep="")))
+      rsaga.geoprocessor(lib = "grid_tools", module = 17, env=SAGAENV,
+                         param = list(INPUT=paste("./Landcover/",lc,res,".sgrd",sep=""),
+                                      OUTPUT=paste("./Landcover/",lc,res,".sgrd",sep="")))
+    }
   }
   
   #10 Bedrock
@@ -496,6 +566,30 @@ if (mask_only_lc) {
     rsaga.geoprocessor(lib = "grid_tools", module = 17, env=SAGAENV,
                        param = list(INPUT=paste("./LAI/lai",res,".sgrd",sep=""),
                                     OUTPUT=paste("./LAI/lai",res,".sgrd",sep="")))
+  }
+  
+  #11 Idgauges
+  if (idgauges)
+  {
+    rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
+                       param = list(GRID=paste("./Idgauges/idgauges",res,".sgrd",sep=""), 
+                                    MASK=paste("./Watershed/watershed",name_gauge,res,".sgrd",sep=""),
+                                    MASKED=paste("./Idgauges/idgauges",res,".sgrd",sep="")))
+    rsaga.geoprocessor(lib = "grid_tools", module = 17, env=SAGAENV,
+                       param = list(INPUT=paste("./Idgauges/idgauges",res,".sgrd",sep=""),
+                                    OUTPUT=paste("./Idgauges/idgauges",res,".sgrd",sep="")))
+  }
+  
+  #11 Geology
+  if (geology)
+  {
+    rsaga.geoprocessor(lib = "grid_tools", module = 24, env = SAGAENV, 
+                       param = list(GRID=paste("./Geology/geology",res,".sgrd",sep=""), 
+                                    MASK=paste("./Watershed/watershed",name_gauge,res,".sgrd",sep=""),
+                                    MASKED=paste("./Geology/geology",res,".sgrd",sep="")))
+    rsaga.geoprocessor(lib = "grid_tools", module = 17, env=SAGAENV,
+                       param = list(INPUT=paste("./Geology/geology",res,".sgrd",sep=""),
+                                    OUTPUT=paste("./Geology/geology",res,".sgrd",sep="")))
   }
 }
 
@@ -549,9 +643,13 @@ if (rivernet)
                          out.grids = paste("./Soil/soil",res,".asc",sep=""), 
                          env=SAGAENV, prec=0)
     if (landcover)
-      rsaga.sgrd.to.esri(in.sgrds = paste("./Landcover/landcover",res,".sgrd",sep=""), 
-                         out.grids = paste("./Landcover/landcover",res,".asc",sep=""), 
-                         env=SAGAENV, prec=0)
+    {
+      for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+        rsaga.sgrd.to.esri(in.sgrds = paste("./Landcover/",lc,res,".sgrd",sep=""), 
+                           out.grids = paste("./Landcover/",lc,res,".asc",sep=""), 
+                           env=SAGAENV, prec=0)
+    }
+     
     if (bedrock)
       rsaga.sgrd.to.esri(in.sgrds = paste("./Bedrock/bedrock",res,".sgrd",sep=""), 
                          out.grids = paste("./Bedrock/bedrock",res,".asc",sep=""), 
@@ -561,6 +659,17 @@ if (rivernet)
       rsaga.sgrd.to.esri(in.sgrds = paste("./LAI/lai",res,".sgrd",sep=""), 
                          out.grids = paste("./LAI/lai",res,".asc",sep=""), 
                          env=SAGAENV, prec=2)
+    
+    if (idgauges)
+      rsaga.sgrd.to.esri(in.sgrds = paste("./Idgauges/idgauges",res,".sgrd",sep=""), 
+                         out.grids = paste("./Idgauges/idgauges",res,".asc",sep=""), 
+                         env=SAGAENV, prec=2)
+    
+    if (geology)
+      rsaga.sgrd.to.esri(in.sgrds = paste("./Geology/geology",res,".sgrd",sep=""), 
+                         out.grids = paste("./Geology/geology",res,".asc",sep=""), 
+                         env=SAGAENV, prec=2)
+    
   }
   
 # POSTPROCESS: create .asc for GEOtop input
@@ -697,19 +806,22 @@ if (rivernet)
     #8 landcover
     if (landcover)
     {
-      ascii <- readLines(con = paste("./Landcover/landcover",res,".asc",sep=""))
-      header <- ascii[1:6]
-      
-      for (i in 1:length(header)){
-        pattern_ <- strsplit(x = header[i], split = " ")[[1]][1]
-        header[i] <- gsub(pattern = pattern_, replacement = geotop_header[i], x = header[i])
+      for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+      {
+        ascii <- readLines(con = paste("./Landcover/",lc,res,".asc",sep=""))
+        header <- ascii[1:6]
+        
+        for (i in 1:length(header)){
+          pattern_ <- strsplit(x = header[i], split = " ")[[1]][1]
+          header[i] <- gsub(pattern = pattern_, replacement = geotop_header[i], x = header[i])
+        }
+        
+        ascii[1:6] <- header
+        writeLines(text = ascii, con = paste("./GEOtopASC",res,"/",lc,".asc",sep=""))
       }
-      
-      ascii[1:6] <- header
-      writeLines(text = ascii, con = paste("./GEOtopASC",res,"/landcover.asc",sep=""))
     }
     
-    #8 landcover
+    #8 bedrock
     if (bedrock)
     {
       ascii <- readLines(con = paste("./Bedrock/bedrock",res,".asc",sep=""))
@@ -839,7 +951,7 @@ if (rivernet)
       }
       
       ascii[1:6] <- header
-      writeLines(text = ascii, con = paste("./mHMASC",res,"/lai.asc",sep=""))
+      writeLines(text = ascii, con = paste("./mHMASC",res,"/LAI_class.asc",sep=""))
     }
     
     #7 soil
@@ -854,13 +966,31 @@ if (rivernet)
       }
       
       ascii[1:6] <- header
-      writeLines(text = ascii, con = paste("./mHMASC",res,"/soil.asc",sep=""))
+      writeLines(text = ascii, con = paste("./mHMASC",res,"/soil_class.asc",sep=""))
     }
     
     #8 landcover
     if (landcover)
     {
-      ascii <- readLines(con = paste("./Landcover/landcover",res,".asc",sep=""))
+      for (lc in substr(lc_scenes, 1, nchar(lc_scenes)-4))
+      {
+        ascii <- readLines(con = paste("./Landcover/",lc,res,".asc",sep=""))
+        header <- ascii[1:6]
+        
+        for (i in 1:length(header)){
+          pattern_ <- strsplit(x = header[i], split = " ")[[1]][1]
+          header[i] <- gsub(pattern = pattern_, replacement = geotop_header[i], x = header[i])
+        }
+        
+        ascii[1:6] <- header
+        writeLines(text = ascii, con = paste("./mHMASC",res,"/",lc,".asc",sep=""))
+      }
+    }
+    
+    #8 idgauges
+    if (idgauges)
+    {
+      ascii <- readLines(con = paste("./Idgauges/idgauges",res,".asc",sep=""))
       header <- ascii[1:6]
       
       for (i in 1:length(header)){
@@ -869,11 +999,26 @@ if (rivernet)
       }
       
       ascii[1:6] <- header
-      writeLines(text = ascii, con = paste("./mHMASC",res,"/landcover.asc",sep=""))
+      writeLines(text = ascii, con = paste("./mHMASC",res,"/idgauges.asc",sep=""))
+    }
+    
+    #9 geology
+    if (geology)
+    {
+      ascii <- readLines(con = paste("./Geology/geology",res,".asc",sep=""))
+      header <- ascii[1:6]
+      
+      for (i in 1:length(header)){
+        pattern_ <- strsplit(x = header[i], split = " ")[[1]][1]
+        header[i] <- gsub(pattern = pattern_, replacement = geotop_header[i], x = header[i])
+      }
+      
+      ascii[1:6] <- header
+      writeLines(text = ascii, con = paste("./mHMASC",res,"/geology_class.asc",sep=""))
     }
     
     # change NA values
-    files <- dir("./mHMASC100", full.names = T)
+    files <- dir(paste("./mHMASC",res,sep=""), full.names = T)
     for (i in files)
     {
       print(paste("create",i))
